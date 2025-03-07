@@ -11,6 +11,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 /**
  * This program opens a connection to a computer specified
  * as the first command-line argument.  If no command-line
@@ -25,36 +31,36 @@ import javafx.stage.Stage;
  */
 
 public class Client extends Application {
-//    private Socket clientSocket;
-//    private PrintWriter out;
-//    private BufferedReader in;
-//
-//    public void startConnection(String ip, int port) throws IOException {
-//        clientSocket = new Socket(ip, port);
-//        out = new PrintWriter(clientSocket.getOutputStream(), true);
-//        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-//    }
-//
-//    public CustomerResponse sendRequest() throws Exception {
-//        out.println(CustomerRequest.toJSON(new CustomerRequest(1)));
-//        return CustomerResponse.fromJSON(in.readLine());
-//    }
-//
-//    public void stopConnection() throws IOException {
-//        in.close();
-//        out.close();
-//        clientSocket.close();
-//    }
-//    public static void main(String[] args) {
-//        Client client = new Client();
-//        try {
-//            client.startConnection("127.0.0.1", 4444);
-//            System.out.println(client.sendRequest().toString());
-//            client.stopConnection();
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    private Socket clientSocket;
+    private PrintWriter out;
+    private BufferedReader in;
+
+    public void startConnection(String ip, int port) throws IOException {
+        clientSocket = new Socket(ip, port);
+        out = new PrintWriter(clientSocket.getOutputStream(), true);
+        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+    }
+
+    public CustomerResponse sendRequest() throws Exception {
+        out.println(CustomerRequest.toJSON(new CustomerRequest(1)));
+        return CustomerResponse.fromJSON(in.readLine());
+    }
+
+    public void stopConnection() throws IOException {
+        in.close();
+        out.close();
+        clientSocket.close();
+    }
+    public Object accessServer() {
+        Client client = new Client();
+        try {
+            client.startConnection("127.0.0.1", 4444);
+            return client.sendRequest();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static void main(String[] args) {
         launch();  // Run this Application.
@@ -64,7 +70,9 @@ public class Client extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        Label message = new Label("First FX Application!");
+        CustomerResponse response = (CustomerResponse) accessServer();
+
+        Label message = new Label(response.getFirstName() + " " + response.getLastName());
         message.setFont(new Font(40));
 
         Button helloButton = new Button("Say Hello");
