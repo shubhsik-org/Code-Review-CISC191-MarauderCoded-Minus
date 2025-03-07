@@ -2,6 +2,7 @@ package edu.sdccd.cisc191.template;
 
 import java.net.*;
 import java.io.*;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -29,8 +30,12 @@ public class Server {
         String inputLine;
         while ((inputLine = in.readLine()) != null) {
             CustomerRequest request = CustomerRequest.fromJSON(inputLine);
-            Game response = new Game("Team 1", "Team 2", new Date(2025, 3, 24));
-            out.println(Game.toJSON(response));
+            Game game1 = new Game("Team 1", "Team 2", new Date(2025, 2, 24));
+            Game game2 = new Game("Team 3", "Team 4", new Date(2025, 2, 25));
+            Game game3 = new Game("Team 5", "Team 6", new Date(2025, 3, 26));
+
+            Game[] games = {game1, game2, game3};
+            out.println(Arrays.toString(games));
         }
     }
 

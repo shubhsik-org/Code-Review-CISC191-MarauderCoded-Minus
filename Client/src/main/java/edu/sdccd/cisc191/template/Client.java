@@ -41,9 +41,9 @@ public class Client extends Application {
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
 
-    public Game sendRequest() throws Exception {
+    public Game[] sendRequest() throws Exception {
         out.println(CustomerRequest.toJSON(new CustomerRequest(1)));
-        return Game.fromJSON(in.readLine());
+        return new Game[]{Game.fromJSON(in.readLine())};
     }
 
     public void stopConnection() throws IOException {
@@ -51,7 +51,7 @@ public class Client extends Application {
         out.close();
         clientSocket.close();
     }
-    public Object accessServer() {
+    public Game[] accessServer() {
         Client client = new Client();
         try {
             client.startConnection("127.0.0.1", 4444);
@@ -70,15 +70,29 @@ public class Client extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        Game response = (Game) accessServer();
+        Game[] response = accessServer();
 
-        Label message = new Label("Betting App");
-        message.setFont(new Font(40));
+        Label msg1 = new Label("Betting App");
+        Label msg2 = new Label("Betting App");
+        Label msg3 = new Label("Betting App");
+
+        msg1.setFont(new Font(40));
+        msg2.setFont(new Font(40));
+        msg3.setFont(new Font(40));
+
 
         Button helloButton = new Button("Vs");
-        helloButton.setOnAction(evt -> message.setText(response.getTeam1() + " Vs " + response.getTeam2()));
+        helloButton.setOnAction(evt -> {
+            msg1.setText(response[0].getTeam1() + " Vs " + response[0].getTeam2());
+            msg2.setText(response[1].getTeam1() + " Vs " + response[1].getTeam2());
+            msg3.setText(response[2].getTeam1() + " Vs " + response[2].getTeam2());
+                });
         Button goodbyeButton = new Button("Date");
-        goodbyeButton.setOnAction( evt -> message.setText(response.getDate().toString()) );
+        goodbyeButton.setOnAction(evt -> {
+            msg1.setText(response[0].getDate().toString());
+            msg2.setText(response[0].getDate().toString());
+            msg3.setText(response[0].getDate().toString());
+        });
         Button quitButton = new Button("Quit");
         quitButton.setOnAction( evt -> Platform.exit() );
 
@@ -86,7 +100,9 @@ public class Client extends Application {
         buttonBar.getChildren().addAll(helloButton, goodbyeButton, quitButton);
         buttonBar.setAlignment(Pos.CENTER);
         BorderPane root = new BorderPane();
-        root.setCenter(message);
+        root.setTop(msg1);
+        root.setCenter(msg2);
+        root.setLeft(msg3);
         root.setBottom(buttonBar);
 
         Scene scene = new Scene(root, 450, 200);
