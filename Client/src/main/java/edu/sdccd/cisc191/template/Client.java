@@ -41,9 +41,9 @@ public class Client extends Application {
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
 
-    public CustomerResponse sendRequest() throws Exception {
+    public Game sendRequest() throws Exception {
         out.println(CustomerRequest.toJSON(new CustomerRequest(1)));
-        return CustomerResponse.fromJSON(in.readLine());
+        return Game.fromJSON(in.readLine());
     }
 
     public void stopConnection() throws IOException {
@@ -70,15 +70,15 @@ public class Client extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        CustomerResponse response = (CustomerResponse) accessServer();
+        Game response = (Game) accessServer();
 
-        Label message = new Label(response.getFirstName() + " " + response.getLastName());
+        Label message = new Label("Betting App");
         message.setFont(new Font(40));
 
-        Button helloButton = new Button("Say Hello");
-        helloButton.setOnAction(evt -> message.setText("Hello World!"));
-        Button goodbyeButton = new Button("Say Goodbye");
-        goodbyeButton.setOnAction( evt -> message.setText("Goodbye!!") );
+        Button helloButton = new Button("Vs");
+        helloButton.setOnAction(evt -> message.setText(response.getTeam1() + " Vs " + response.getTeam2()));
+        Button goodbyeButton = new Button("Date");
+        goodbyeButton.setOnAction( evt -> message.setText(response.getDate().toString()) );
         Button quitButton = new Button("Quit");
         quitButton.setOnAction( evt -> Platform.exit() );
 

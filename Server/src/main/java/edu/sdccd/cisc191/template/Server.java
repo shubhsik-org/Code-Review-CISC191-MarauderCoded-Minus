@@ -2,6 +2,7 @@ package edu.sdccd.cisc191.template;
 
 import java.net.*;
 import java.io.*;
+import java.util.Date;
 
 /**
  * This program is a server that takes connection requests on
@@ -28,8 +29,8 @@ public class Server {
         String inputLine;
         while ((inputLine = in.readLine()) != null) {
             CustomerRequest request = CustomerRequest.fromJSON(inputLine);
-            CustomerResponse response = new CustomerResponse(request.getId(), "Jane", "Doe");
-            out.println(CustomerResponse.toJSON(response));
+            Game response = new Game("Team 1", "Team 2", new Date(2025, 3, 24));
+            out.println(Game.toJSON(response));
         }
     }
 
