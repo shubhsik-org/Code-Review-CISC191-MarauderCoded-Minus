@@ -36,9 +36,7 @@ public class Game {
 
     @Override
     public String toString() {
-        return String.format(
-                "Customer[team1=%s, team2='%s', date='%s']",
-                team1, team2, date);
+        return team1 + " vs. " + team2 + " on " + date;
     }
 
     public String getTeam1() {
