@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Date;
+import java.util.Random;
 
 public class Game {
 //    private Integer id;
@@ -14,6 +15,8 @@ public class Game {
     private String team1;
     private String team2;
     private Date date;
+    private double team1Odd;
+    private double team2Odd;
 
 
     @JsonIgnore
@@ -32,11 +35,14 @@ public class Game {
         this.team1 = t1;
         this.team2 = t2;
         this.date = Date;
+
+        this.team1Odd = Math.round(Math.random() * 100);
+        this.team2Odd = Math.round(Math.random() * 100);
     }
 
     @Override
     public String toString() {
-        return team1 + " vs. " + team2 + " on " + date;
+        return team1 + " vs. " + team2 + " on " + date.getMonth() + "/" + date.getDate() + "/" + date.getYear();
     }
 
     public String getTeam1() {
@@ -45,6 +51,14 @@ public class Game {
 
     public String getTeam2() {
         return team2;
+    }
+
+    public double getTeam1Odd() {
+        return team1Odd;
+    }
+
+    public double getTeam2Odd() {
+        return team2Odd;
     }
 
     public Date getDate() {

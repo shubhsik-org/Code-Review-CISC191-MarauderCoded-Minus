@@ -14,11 +14,9 @@ import javafx.scene.control.Button;
 import java.awt.*;
 
 public class BetView extends Application {
-    User user;
     Game game;
 
-    public void betView(User user, Stage stage, Game game) throws Exception {
-        this.user = user;
+    public void betView(Stage stage, Game game) throws Exception {
         this.game = game;
         this.start(stage);
     }
@@ -34,7 +32,7 @@ public class BetView extends Application {
 
         b1.setOnAction(evt -> {
             Bet placedBet = new Bet(game, Integer.parseInt(b.getText()));
-            user.addBet(placedBet);
+            Client.user.addBet(placedBet);
             System.out.println(placedBet.toString());
             try {
                 new Client().start(stage);
