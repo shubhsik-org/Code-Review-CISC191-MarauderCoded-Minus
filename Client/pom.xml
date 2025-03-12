@@ -15,6 +15,7 @@
     <artifactId>Client</artifactId>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx -->
         <dependency>
             <groupId>edu.sdccd.cisc191.template</groupId>
             <artifactId>Common</artifactId>
@@ -27,6 +28,14 @@
             <version>${javafx.version}</version>
             <classifier>win</classifier>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>${javafx.version}</version>
+            <classifier>win</classifier>
+        </dependency>
+
+
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
