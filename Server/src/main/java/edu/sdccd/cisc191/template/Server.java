@@ -22,6 +22,7 @@ public class Server {
     private BufferedReader in;
 
     public void start(int port) throws Exception {
+        System.out.println("Starting server on port " + port);
         serverSocket = new ServerSocket(port);
         clientSocket = serverSocket.accept();
         out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -34,8 +35,9 @@ public class Server {
             Game game2 = new Game("Team 3", "Team 4", new Date(2025, 2, 25));
             Game game3 = new Game("Team 5", "Team 6", new Date(2025, 3, 26));
 
-            Game[] games = {game1, game2, game3};
-            out.println(Arrays.toString(games));
+            Game[] response = {game1, game2, game3};
+            out.println(Arrays.toString(response));
+            System.out.println(Arrays.toString(response));
         }
     }
 

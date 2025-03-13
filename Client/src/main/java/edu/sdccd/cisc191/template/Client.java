@@ -43,44 +43,52 @@ import java.util.Locale;
 public class Client extends Application {
     public static User user = new User("Chase", 1000000);
 
-//    private Socket clientSocket;
-//    private PrintWriter out;
-//    private BufferedReader in;
-//
-//    public void startConnection(String ip, int port) throws IOException {
-//        clientSocket = new Socket(ip, port);
-//        out = new PrintWriter(clientSocket.getOutputStream(), true);
-//        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-//    }
-//
-//    public Game[] sendRequest() throws Exception {
-//        out.println(CustomerRequest.toJSON(new CustomerRequest(1)));
-//        return new Game[]{Game.fromJSON(in.readLine())};
-//    }
-//
-//    public void stopConnection() throws IOException {
-//        in.close();
-//        out.close();
-//        clientSocket.close();
-//    }
-//    public Game[] accessServer() {
-//        Client client = new Client();
-//        try {
-//            client.startConnection("127.0.0.1", 4444);
-//            return client.sendRequest();
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
+    private Socket clientSocket;
+    private PrintWriter out;
+    private BufferedReader in;
+
+    public void startConnection(String ip, int port) throws IOException {
+        clientSocket = new Socket(ip, port);
+        out = new PrintWriter(clientSocket.getOutputStream(), true);
+        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+    }
+
+    public Game[] sendRequest() throws Exception {
+        out.println(CustomerRequest.toJSON(new CustomerRequest(1)));
+        return new Game[]{Game.fromJSON(in.readLine())};
+    }
+
+    public void stopConnection() throws IOException {
+        in.close();
+        out.close();
+        clientSocket.close();
+    }
+    public Game[] accessServer() {
+        Client client = new Client();
+        try {
+            client.startConnection("127.0.0.1", 4444);
+            return client.sendRequest();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static void main(String[] args) {
-        launch();  // Run this Application.
+        launch();// Run this Application.
     }
 
 
     @Override
     public void start(Stage stage) throws Exception {
+        Client client = new Client();
+        try {
+            client.startConnection("127.0.0.1", 4444);
+            System.out.println(client.sendRequest());
+            client.stopConnection();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
         Game[] response = new Game[]{
                 new Game("Team 1", "Team 2", new Date(125, Calendar.APRIL, 24)),
                 new Game("Team 5", "Team 6", new Date(125, Calendar.APRIL, 26)),
