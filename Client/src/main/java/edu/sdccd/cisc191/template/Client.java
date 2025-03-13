@@ -2,6 +2,7 @@ package edu.sdccd.cisc191.template;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.layout.Background;
@@ -43,36 +44,36 @@ import java.util.Locale;
 public class Client extends Application {
     public static User user = new User("Chase", 1000000);
 
-//    private Socket clientSocket;
-//    private PrintWriter out;
-//    private BufferedReader in;
-//
-//    public void startConnection(String ip, int port) throws IOException {
-//        clientSocket = new Socket(ip, port);
-//        out = new PrintWriter(clientSocket.getOutputStream(), true);
-//        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-//    }
-//
-//    public Game[] sendRequest() throws Exception {
-//        out.println(CustomerRequest.toJSON(new CustomerRequest(1)));
-//        return new Game[]{Game.fromJSON(in.readLine())};
-//    }
-//
-//    public void stopConnection() throws IOException {
-//        in.close();
-//        out.close();
-//        clientSocket.close();
-//    }
-//    public Game[] accessServer() {
-//        Client client = new Client();
-//        try {
-//            client.startConnection("127.0.0.1", 4444);
-//            return client.sendRequest();
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
+    private Socket clientSocket;
+    private PrintWriter out;
+    private BufferedReader in;
+
+    public void startConnection(String ip, int port) throws IOException {
+        clientSocket = new Socket(ip, port);
+        out = new PrintWriter(clientSocket.getOutputStream(), true);
+        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+    }
+
+    public Game[] sendRequest() throws Exception {
+        out.println(CustomerRequest.toJSON(new CustomerRequest(1)));
+        return new Game[]{Game.fromJSON(in.readLine())};
+    }
+
+    public void stopConnection() throws IOException {
+        in.close();
+        out.close();
+        clientSocket.close();
+    }
+    public Game[] accessServer() {
+        Client client = new Client();
+        try {
+            client.startConnection("127.0.0.1", 4444);
+            return client.sendRequest();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static void main(String[] args) {
         launch();  // Run this Application.
@@ -89,10 +90,23 @@ public class Client extends Application {
 
         };
 
+        User[] users = new User[]{
+                new User("Andy", 129030),
+                new User("Mahad", 214923),
+                new User("Julian", 324960),
+                new User("Brian", 492313),
+
+        };
+
+
 
         VBox labelView = new VBox(10);
         HBox userInfo = new HBox(10);
         VBox betList = new VBox(10);
+        VBox botsBox  = new VBox(10);
+
+        botsBox.setPadding(new Insets(1));
+
 
         try {
 
@@ -148,6 +162,13 @@ public class Client extends Application {
                     }
                 });
 
+                for (Bet bet : user.getBets()) {
+                    if (bet.getGame().equals(game)) {
+                        betTeam1.setDisable(true);
+                        betTeam2.setDisable(true);
+                    }
+                }
+
                 Label team2Odds = new Label(game.getTeam2Odd() + "%");
 
 
@@ -158,10 +179,24 @@ public class Client extends Application {
                 labelView.getChildren().add(gameBox); // Add new row to the list of upcoming games
             }
 
-            userInfo.setBackground(Background.fill(Color.color(0, 1, 0)));
+            userInfo.setBackground(Background.fill(Color.rgb(45, 51, 107)));
             Label userName = new Label(user.getName());
+            userName.setFont(new Font(20));
+            userName.setTextFill(Color.WHITE);
 
-            Label money = new Label("" + user.getMoney());
+            Label money = new Label("$" + user.getMoney());
+            money.setFont(new Font(20));
+            money.setTextFill(Color.WHITE);
+
+
+
+            for (User user : users) {
+                HBox botBox = new HBox(10);
+                Label userName1 = new Label(user.getName());
+                Label money1 = new Label("$" + user.getMoney());
+                botBox.getChildren().addAll(userName1, money1);
+                botsBox.getChildren().add(botBox);
+            }
 
 
             for (Bet bet : user.getBets()) {
@@ -182,7 +217,7 @@ public class Client extends Application {
         labelView.setAlignment(Pos.CENTER);
 
         VBox everything = new VBox(10);
-        everything.getChildren().addAll(userInfo, labelView, betList);
+        everything.getChildren().addAll(userInfo, labelView, botsBox, betList);
 
         Scene scene = new Scene(everything, 800, 800);
         stage.setScene(scene);
