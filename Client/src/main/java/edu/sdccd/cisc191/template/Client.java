@@ -23,10 +23,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.text.DateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * This program opens a connection to a computer specified
@@ -54,9 +51,9 @@ public class Client extends Application {
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
 
-    public Game[] sendRequest() throws Exception {
-        out.println(CustomerRequest.toJSON(new CustomerRequest(1)));
-        return new Game[]{Game.fromJSON(in.readLine())};
+    public Game sendRequest(int id) throws Exception {
+        out.println(CustomerRequest.toJSON(new CustomerRequest(id)));
+        return Game.fromJSON(in.readLine());
     }
 
     public void stopConnection() throws IOException {
@@ -64,11 +61,12 @@ public class Client extends Application {
         out.close();
         clientSocket.close();
     }
-    public Game[] accessServer() {
+    public Game accessServer(int id) {
         Client client = new Client();
         try {
             client.startConnection("127.0.0.1", 4444);
-            return client.sendRequest();
+            System.out.println("Sending request");
+            return client.sendRequest(id);
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -83,23 +81,9 @@ public class Client extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Client client = new Client();
-        try {
-            client.startConnection("127.0.0.1", 4444);
-            System.out.println("Sending request");
-            System.out.println(Arrays.toString(client.sendRequest()));
-            System.out.println("Returned request");
-            client.stopConnection();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-//        Game[] response = new Game[]{
-//                new Game("Team 1", "Team 2", new Date(125, Calendar.APRIL, 24)),
-//                new Game("Team 5", "Team 6", new Date(125, Calendar.APRIL, 26)),
-//                new Game("Team 3", "Team 4", new Date(125, Calendar.APRIL, 25)),
-//                new Game("Team 7", "Team 8", new Date(125, Calendar.APRIL, 27))
-//
-//        };
-//
+        ArrayList<Game> response = new ArrayList<Game>();
+        response.add(accessServer(1));
+        System.out.println(response.toString());
 //
 //        VBox labelView = new VBox(10);
 //        HBox userInfo = new HBox(10);
@@ -200,7 +184,7 @@ public class Client extends Application {
 //        stage.setTitle("Marauder Bets");
 //        stage.show();
 //
-//
+
     }
 } //end class Client
 

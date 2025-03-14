@@ -29,18 +29,19 @@ public class Server {
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
         String inputLine;
+        //Server logic goes here...
+        // Inputline is a stream of CustomerRequest objects in
+        // JSON format
         while ((inputLine = in.readLine()) != null) {
             CustomerRequest request = CustomerRequest.fromJSON(inputLine);
             System.out.println(request.toString());
-            Game game1 = new Game("Team 1", "Team 2", new Date(2025, 2, 24));
-            Game game2 = new Game("Team 3", "Team 4", new Date(2025, 2, 25));
-            Game game3 = new Game("Team 5", "Team 6", new Date(2025, 3, 26));
-
-            Game response = game1;
+            Game[] gameDatabase = new Game[]{
+            new Game("Team 1", "Team 2", new Date(2025, 2, 24)),
+            new Game("Team 3", "Team 4", new Date(2025, 2, 25)),
+            new Game("Team 5", "Team 6", new Date(2025, 3, 26)),
+        };
+            Game response = gameDatabase[request.getId()];
             out.println(Game.toJSON(response));
-            System.out.println(response);
-            System.out.println(Game.toJSON(response));
-            System.out.println(response.getClass());
         }
     }
 
