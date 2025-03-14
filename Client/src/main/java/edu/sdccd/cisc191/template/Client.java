@@ -5,8 +5,7 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
@@ -14,8 +13,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
@@ -82,6 +79,9 @@ public class Client extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        BorderPane borderPane = new BorderPane();
+
+
         Game[] response = new Game[]{
                 new Game("Team 1", "Team 2", new Date(125, Calendar.APRIL, 24)),
                 new Game("Team 5", "Team 6", new Date(125, Calendar.APRIL, 26)),
@@ -163,12 +163,13 @@ public class Client extends Application {
                 });
 
                 for (Bet bet : user.getBets()) {
+                    System.out.println("Checking bet: " + bet.getGame());
                     if (bet.getGame().equals(game)) {
+                        System.out.println("Match found! Disabling buttons.");
                         betTeam1.setDisable(true);
                         betTeam2.setDisable(true);
                     }
                 }
-
                 Label team2Odds = new Label(game.getTeam2Odd() + "%");
 
 
@@ -213,13 +214,15 @@ public class Client extends Application {
             e.printStackTrace();
         }
 
+        labelView.setPadding(new Insets(20));
 
-        labelView.setAlignment(Pos.CENTER);
 
-        VBox everything = new VBox(10);
-        everything.getChildren().addAll(userInfo, labelView, botsBox, betList);
+        borderPane.setCenter(labelView);
+        borderPane.setBottom(betList);
+        borderPane.setTop(userInfo);
+        borderPane.setRight(botsBox);
 
-        Scene scene = new Scene(everything, 800, 800);
+        Scene scene = new Scene(borderPane, 1200, 600);
         stage.setScene(scene);
         stage.setTitle("Marauder Bets");
         stage.show();
