@@ -4,6 +4,7 @@ public class Bet {
     private Game game;
     private int betAmt;
     private int winAmt;
+    public float winodd;
 
     public int getWinAmt() {
         return winAmt;

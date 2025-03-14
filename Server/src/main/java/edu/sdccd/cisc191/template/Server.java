@@ -2,7 +2,6 @@ package edu.sdccd.cisc191.template;
 
 import java.net.*;
 import java.io.*;
-import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -16,43 +15,51 @@ import java.util.Date;
  * to process the connection.
  */
 public class Server {
-    private ServerSocket serverSocket;
-    private Socket clientSocket;
-    private PrintWriter out;
-    private BufferedReader in;
-
-    public void start(int port) throws Exception {
-        serverSocket = new ServerSocket(port);
-        clientSocket = serverSocket.accept();
-        out = new PrintWriter(clientSocket.getOutputStream(), true);
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-
-        String inputLine;
-        while ((inputLine = in.readLine()) != null) {
-            CustomerRequest request = CustomerRequest.fromJSON(inputLine);
-            Game game1 = new Game("Team 1", "Team 2", new Date(2025, 2, 24));
-            Game game2 = new Game("Team 3", "Team 4", new Date(2025, 2, 25));
-            Game game3 = new Game("Team 5", "Team 6", new Date(2025, 3, 26));
-
-            Game[] games = {game1, game2, game3};
-            out.println(Arrays.toString(games));
-        }
-    }
-
-    public void stop() throws IOException {
-        in.close();
-        out.close();
-        clientSocket.close();
-        serverSocket.close();
-    }
-
     public static void main(String[] args) {
-        Server server = new Server();
+        // In case we cannot later establish a server for some reason
+        // This declaration will allow us to exit gracefully.
+        ServerSocket serverSocket = null;
+
         try {
-            server.start(4444);
-            server.stop();
-        } catch(Exception e) {
+
+            // Server is listening on port 4444
+            serverSocket = new ServerSocket(4444);
+            System.out.println("Server started on port 4444");
+
+            // Allows the multi-threading to happen
+            serverSocket.setReuseAddress(true);
+
+            // Wait for clients forever
+            while (true) {
+
+                Socket client = serverSocket.accept();
+
+                // Displaying that new client is connected to the server
+                System.out.println("New client connected: " + client.getInetAddress().getHostAddress());
+
+                // Create the thread we pass on handling to
+                ClientHandler clientSocket = new ClientHandler(client);
+
+
+                new Thread(clientSocket).start();
+            }
+        } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (serverSocket != null) {
+                try {
+                    serverSocket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
-} //end class Server
+}
+//        Server server = new Server();
+//        try {
+//            server.start(4444);
+//            server.stop();
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//        }

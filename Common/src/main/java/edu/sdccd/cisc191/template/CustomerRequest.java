@@ -23,7 +23,7 @@ public class CustomerRequest {
     @Override
     public String toString() {
         return String.format(
-                "Customer[id=%d]",
+                "GameID[id=%d]",
                 id);
     }
 
