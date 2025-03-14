@@ -38,6 +38,7 @@ public class Server {
             Game[] response = {game1, game2, game3};
             out.println(Arrays.toString(response));
             System.out.println(Arrays.toString(response));
+            System.out.println(response.getClass());
         }
     }
 
@@ -52,7 +53,7 @@ public class Server {
         Server server = new Server();
         try {
             server.start(4444);
-            server.stop();
+            //server.stop();
         } catch(Exception e) {
             e.printStackTrace();
         }
