@@ -64,7 +64,7 @@ public class Client extends Application {
     public Game accessServer(int id) {
         Client client = new Client();
         try {
-            client.startConnection("127.0.0.1", 4444);
+            client.startConnection("localhost", 4444);
             System.out.println("Sending request");
             return client.sendRequest(id);
         } catch(Exception e) {
@@ -82,7 +82,7 @@ public class Client extends Application {
     public void start(Stage stage) throws Exception {
         Client client = new Client();
         ArrayList<Game> response = new ArrayList<Game>();
-        response.add(accessServer(1));
+        try {response.add(accessServer(1)); } catch (Exception e) {e.printStackTrace();};
         System.out.println(response.toString());
 //
 //        VBox labelView = new VBox(10);

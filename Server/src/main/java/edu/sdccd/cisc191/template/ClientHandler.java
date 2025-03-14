@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 // ClientHandler class
 class ClientHandler implements Runnable {
@@ -26,23 +28,20 @@ class ClientHandler implements Runnable {
         try {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            String inputLine;
 
+            String inputLine;
+            // Server logic goes in here(as in processing the type of request received
+            // Positive IDs correspond to a getGame request
             while ((inputLine = in.readLine()) != null) {
                 CustomerRequest request = CustomerRequest.fromJSON(inputLine);
                 System.out.println(request.toString());
-                Game response;
 
-                Game[] gameDatabase = new Game[]{
-                        new Game("Team 1", "Team 2", new Date(2025, 2, 24)),
-                        new Game("Team 3", "Team 4", new Date(2025, 2, 25)),
-                        new Game("Team 5", "Team 6", new Date(2025, 3, 26)),
-                };
-                if (request.getId() >= gameDatabase.length) {
-                    response = null;
-                } else {
-                    response = gameDatabase[request.getId()];
+                Game response = null;
+
+                if(request.getId() >= 0) {
+                    response = getGame(request);
                 }
+
                 out.println(Game.toJSON(response));
             }
         } catch (Exception e) {
@@ -60,5 +59,30 @@ class ClientHandler implements Runnable {
                 e.printStackTrace();
             }
         }
+    }
+
+    // Gets the corresponding game that was requested
+    private static Game getGame(CustomerRequest request) {
+        Game response;
+
+        ArrayList<Game> gameDatabase= new ArrayList<Game>();
+        // Populate the gameDatabase with fake data
+        int count = 0; // To generate real looking data
+        int i = 0;
+
+        // Enter desired number of elements here
+        while (i < 10) {
+            gameDatabase.add(new Game(String.format("Team %d", count), String.format("Team %d", count + 1), new Date(2025 + count, count % 12, count % 12)));
+            count += 2;
+            i += 1;
+        }
+
+        // Check if the ID is a valid game, then return
+        if (request.getId() >= gameDatabase.size()) {
+            response = null;
+        } else {
+            response = gameDatabase.get(request.getId());
+        }
+        return response;
     }
 }

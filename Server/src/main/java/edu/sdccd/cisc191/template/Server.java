@@ -15,56 +15,16 @@ import java.util.Date;
  * to process the connection.
  */
 public class Server {
-    private ServerSocket serverSocket;
-    private Socket clientSocket;
-    private PrintWriter out;
-    private BufferedReader in;
-
-    public void start(int port) throws Exception {
-        System.out.println("Starting server on port " + port);
-        serverSocket = new ServerSocket(port);
-        clientSocket = serverSocket.accept();
-        out = new PrintWriter(clientSocket.getOutputStream(), true);
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-
-        String inputLine;
-        //Server logic goes here...
-        // Inputline is a stream of CustomerRequest objects in
-        // JSON format
-        while ((inputLine = in.readLine()) != null) {
-            CustomerRequest request = CustomerRequest.fromJSON(inputLine);
-            System.out.println(request.toString());
-            Game response;
-
-            Game[] gameDatabase = new Game[]{
-                    new Game("Team 1", "Team 2", new Date(2025, 2, 24)),
-                    new Game("Team 3", "Team 4", new Date(2025, 2, 25)),
-                    new Game("Team 5", "Team 6", new Date(2025, 3, 26)),
-            };
-            if (request.getId() >= gameDatabase.length) {
-                response = null;
-            } else {
-                response = gameDatabase[request.getId()];
-            }
-            out.println(Game.toJSON(response));
-        }
-    }
-
-    public void stop() throws IOException {
-        in.close();
-        out.close();
-        clientSocket.close();
-        serverSocket.close();
-    }
-
     public static void main(String[] args) {
-
+        // In case we cannot later establish a server for some reason
+        // This declaration will allow us to exit gracefully.
         ServerSocket serverSocket = null;
 
         try {
 
-            // server is listening on port 4444
+            // Server is listening on port 4444
             serverSocket = new ServerSocket(4444);
+            System.out.println("Server started on port 4444");
 
             // Allows the multi-threading to happen
             serverSocket.setReuseAddress(true);
@@ -72,22 +32,15 @@ public class Server {
             // Wait for clients forever
             while (true) {
 
-                // socket object to receive incoming client
-                // requests
                 Socket client = serverSocket.accept();
 
-                // Displaying that new client is connected
-                // to server
-                System.out.println("New client connected: "
-                        + client.getInetAddress()
-                        .getHostAddress());
+                // Displaying that new client is connected to the server
+                System.out.println("New client connected: " + client.getInetAddress().getHostAddress());
 
-                // create a new thread object
-                ClientHandler clientSocket
-                        = new ClientHandler(client);
+                // Create the thread we pass on handling to
+                ClientHandler clientSocket = new ClientHandler(client);
 
-                // This thread will handle the client
-                // separately
+
                 new Thread(clientSocket).start();
             }
         } catch (IOException e) {
