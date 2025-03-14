@@ -2,7 +2,6 @@ package edu.sdccd.cisc191.template;
 
 import java.net.*;
 import java.io.*;
-import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -35,12 +34,18 @@ public class Server {
         while ((inputLine = in.readLine()) != null) {
             CustomerRequest request = CustomerRequest.fromJSON(inputLine);
             System.out.println(request.toString());
+            Game response;
+
             Game[] gameDatabase = new Game[]{
-            new Game("Team 1", "Team 2", new Date(2025, 2, 24)),
-            new Game("Team 3", "Team 4", new Date(2025, 2, 25)),
-            new Game("Team 5", "Team 6", new Date(2025, 3, 26)),
-        };
-            Game response = gameDatabase[request.getId()];
+                    new Game("Team 1", "Team 2", new Date(2025, 2, 24)),
+                    new Game("Team 3", "Team 4", new Date(2025, 2, 25)),
+                    new Game("Team 5", "Team 6", new Date(2025, 3, 26)),
+            };
+            if (request.getId() >= gameDatabase.length) {
+                response = null;
+            } else {
+                response = gameDatabase[request.getId()];
+            }
             out.println(Game.toJSON(response));
         }
     }
@@ -53,12 +58,55 @@ public class Server {
     }
 
     public static void main(String[] args) {
-        Server server = new Server();
+
+        ServerSocket serverSocket = null;
+
         try {
-            server.start(4444);
-            server.stop();
-        } catch(Exception e) {
+
+            // server is listening on port 4444
+            serverSocket = new ServerSocket(4444);
+
+            // Allows the multi-threading to happen
+            serverSocket.setReuseAddress(true);
+
+            // Wait for clients forever
+            while (true) {
+
+                // socket object to receive incoming client
+                // requests
+                Socket client = serverSocket.accept();
+
+                // Displaying that new client is connected
+                // to server
+                System.out.println("New client connected: "
+                        + client.getInetAddress()
+                        .getHostAddress());
+
+                // create a new thread object
+                ClientHandler clientSocket
+                        = new ClientHandler(client);
+
+                // This thread will handle the client
+                // separately
+                new Thread(clientSocket).start();
+            }
+        } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (serverSocket != null) {
+                try {
+                    serverSocket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
-} //end class Server
+}
+//        Server server = new Server();
+//        try {
+//            server.start(4444);
+//            server.stop();
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//        }
