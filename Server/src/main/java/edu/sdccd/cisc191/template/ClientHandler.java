@@ -71,7 +71,7 @@ class ClientHandler implements Runnable {
         int i = 0;
 
         // Enter desired number of elements here
-        while (i < 10) {
+        while (i < 5) {
             gameDatabase.add(new Game(String.format("Team %d", count), String.format("Team %d", count + 1), new Date(2025 + count, count % 12, count % 12)));
             count += 2;
             i += 1;

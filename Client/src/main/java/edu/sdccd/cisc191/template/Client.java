@@ -82,11 +82,11 @@ public class Client extends Application {
 
 
         Game[] response = new Game[]{
-                new Game("Team 1", "Team 2", new Date(125, Calendar.APRIL, 24)),
-                new Game("Team 5", "Team 6", new Date(125, Calendar.APRIL, 26)),
-                new Game("Team 3", "Team 4", new Date(125, Calendar.APRIL, 25)),
-                new Game("Team 7", "Team 8", new Date(125, Calendar.APRIL, 27))
-
+                accessServer(0),
+                accessServer(1),
+                accessServer(2),
+                accessServer(3),
+                accessServer(4),
         };
 
         User[] users = new User[]{
@@ -98,15 +98,14 @@ public class Client extends Application {
         };
 
 
-
         VBox labelView = new VBox(10);
         HBox userInfo = new HBox(10);
         VBox betList = new VBox(10);
-        VBox botsBox  = new VBox(10);
+        VBox botsBox = new VBox(10);
 
         botsBox.setPadding(new Insets(1));
 
-
+        // Populates the games into to the GUI
         try {
 
             for (Game game : response) {
@@ -160,7 +159,7 @@ public class Client extends Application {
                         throw new RuntimeException(e);
                     }
                 });
-
+                // From Andy - Julian, what is this for loop doing? What is it supposed to check?
                 for (Bet bet : user.getBets()) {
                     System.out.println("Checking bet: " + bet.getGame());
                     if (bet.getGame().equals(game)) {
@@ -187,7 +186,6 @@ public class Client extends Application {
             Label money = new Label("$" + user.getMoney());
             money.setFont(new Font(20));
             money.setTextFill(Color.WHITE);
-
 
 
             for (User user : users) {
