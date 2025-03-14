@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.text.DateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -84,120 +85,122 @@ public class Client extends Application {
         Client client = new Client();
         try {
             client.startConnection("127.0.0.1", 4444);
-            System.out.println(client.sendRequest());
+            System.out.println("Sending request");
+            System.out.println(Arrays.toString(client.sendRequest()));
+            System.out.println("Returned request");
             client.stopConnection();
         } catch(Exception e) {
             e.printStackTrace();
         }
-        Game[] response = new Game[]{
-                new Game("Team 1", "Team 2", new Date(125, Calendar.APRIL, 24)),
-                new Game("Team 5", "Team 6", new Date(125, Calendar.APRIL, 26)),
-                new Game("Team 3", "Team 4", new Date(125, Calendar.APRIL, 25)),
-                new Game("Team 7", "Team 8", new Date(125, Calendar.APRIL, 27))
-
-        };
-
-
-        VBox labelView = new VBox(10);
-        HBox userInfo = new HBox(10);
-        VBox betList = new VBox(10);
-
-        try {
-
-            for (Game game : response) {
-                HBox gameBox = new HBox(10); // Encapsulating HBox for all of the labels and buttons about a game
-
-                HBox versusBox = new HBox(5); // Encapsulating all the labels (teams, date) about a game
-
-                // Label for the first team
-                Label team1 = new Label(game.getTeam1());
-                team1.setTextFill(Color.color(1, 0, 0));
-                team1.setStyle("-fx-font-weight: bold");
-
-                Label vs = new Label("vs. ");
-
-                // Label for the second team
-                Label team2 = new Label(game.getTeam2());
-                team2.setTextFill(Color.color(0, 0, 1));
-                team2.setStyle("-fx-font-weight: bold");
-
-                Locale loc = new Locale("en", "US");
-                DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, loc);
-                String stringDate = dateFormat.format(game.getDate());
-
-                // Label for the date
-                Label date = new Label(stringDate);
-                date.setTextFill(Color.rgb(117, 117, 117));
-
-                // Place the team 1, team 2 and date labels into the label box
-                gameBox.getChildren().addAll(team1, vs, team2, date);
-
-                HBox betBox = new HBox(5); // Encapsulating HBox for Bet action buttons
-
-                // Button to bet on the first team
-                Button betTeam1 = new Button("Bet " + game.getTeam1());
-                betTeam1.setOnAction(evt -> {
-                    try {
-                        new BetView().betView(stage, game);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-
-                Label team1Odds = new Label(game.getTeam1Odd() + "%");
-
-                // Button to bet on the second team
-                Button betTeam2 = new Button("Bet " + game.getTeam2());
-                betTeam2.setOnAction(evt -> {
-                    try {
-                        new BetView().betView(stage, game);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-
-                Label team2Odds = new Label(game.getTeam2Odd() + "%");
-
-
-                betBox.getChildren().addAll(betTeam1, team1Odds, betTeam2, team2Odds); // Add the bet buttons to the encapsulating HBox
-
-                gameBox.getChildren().addAll(versusBox, betBox); // Add everything involving the game (labels, bet buttons) to a row
-
-                labelView.getChildren().add(gameBox); // Add new row to the list of upcoming games
-            }
-
-            userInfo.setBackground(Background.fill(Color.color(0, 1, 0)));
-            Label userName = new Label(user.getName());
-
-            Label money = new Label("" + user.getMoney());
-
-
-            for (Bet bet : user.getBets()) {
-                HBox betBox = new HBox(10);
-                Label game = new Label(bet.getGame().toString());
-                Label betAmt = new Label("Bet $" + bet.getBetAmt());
-                Label winAmt = new Label("Win $ " + bet.getWinAmt());
-                betBox.getChildren().addAll(game, betAmt, winAmt);
-                betList.getChildren().add(betBox);
-            }
-
-            userInfo.getChildren().addAll(userName, money);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        labelView.setAlignment(Pos.CENTER);
-
-        VBox everything = new VBox(10);
-        everything.getChildren().addAll(userInfo, labelView, betList);
-
-        Scene scene = new Scene(everything, 800, 800);
-        stage.setScene(scene);
-        stage.setTitle("Marauder Bets");
-        stage.show();
-
-
+//        Game[] response = new Game[]{
+//                new Game("Team 1", "Team 2", new Date(125, Calendar.APRIL, 24)),
+//                new Game("Team 5", "Team 6", new Date(125, Calendar.APRIL, 26)),
+//                new Game("Team 3", "Team 4", new Date(125, Calendar.APRIL, 25)),
+//                new Game("Team 7", "Team 8", new Date(125, Calendar.APRIL, 27))
+//
+//        };
+//
+//
+//        VBox labelView = new VBox(10);
+//        HBox userInfo = new HBox(10);
+//        VBox betList = new VBox(10);
+//
+//        try {
+//
+//            for (Game game : response) {
+//                HBox gameBox = new HBox(10); // Encapsulating HBox for all of the labels and buttons about a game
+//
+//                HBox versusBox = new HBox(5); // Encapsulating all the labels (teams, date) about a game
+//
+//                // Label for the first team
+//                Label team1 = new Label(game.getTeam1());
+//                team1.setTextFill(Color.color(1, 0, 0));
+//                team1.setStyle("-fx-font-weight: bold");
+//
+//                Label vs = new Label("vs. ");
+//
+//                // Label for the second team
+//                Label team2 = new Label(game.getTeam2());
+//                team2.setTextFill(Color.color(0, 0, 1));
+//                team2.setStyle("-fx-font-weight: bold");
+//
+//                Locale loc = new Locale("en", "US");
+//                DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, loc);
+//                String stringDate = dateFormat.format(game.getDate());
+//
+//                // Label for the date
+//                Label date = new Label(stringDate);
+//                date.setTextFill(Color.rgb(117, 117, 117));
+//
+//                // Place the team 1, team 2 and date labels into the label box
+//                gameBox.getChildren().addAll(team1, vs, team2, date);
+//
+//                HBox betBox = new HBox(5); // Encapsulating HBox for Bet action buttons
+//
+//                // Button to bet on the first team
+//                Button betTeam1 = new Button("Bet " + game.getTeam1());
+//                betTeam1.setOnAction(evt -> {
+//                    try {
+//                        new BetView().betView(stage, game);
+//                    } catch (Exception e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                });
+//
+//                Label team1Odds = new Label(game.getTeam1Odd() + "%");
+//
+//                // Button to bet on the second team
+//                Button betTeam2 = new Button("Bet " + game.getTeam2());
+//                betTeam2.setOnAction(evt -> {
+//                    try {
+//                        new BetView().betView(stage, game);
+//                    } catch (Exception e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                });
+//
+//                Label team2Odds = new Label(game.getTeam2Odd() + "%");
+//
+//
+//                betBox.getChildren().addAll(betTeam1, team1Odds, betTeam2, team2Odds); // Add the bet buttons to the encapsulating HBox
+//
+//                gameBox.getChildren().addAll(versusBox, betBox); // Add everything involving the game (labels, bet buttons) to a row
+//
+//                labelView.getChildren().add(gameBox); // Add new row to the list of upcoming games
+//            }
+//
+//            userInfo.setBackground(Background.fill(Color.color(0, 1, 0)));
+//            Label userName = new Label(user.getName());
+//
+//            Label money = new Label("" + user.getMoney());
+//
+//
+//            for (Bet bet : user.getBets()) {
+//                HBox betBox = new HBox(10);
+//                Label game = new Label(bet.getGame().toString());
+//                Label betAmt = new Label("Bet $" + bet.getBetAmt());
+//                Label winAmt = new Label("Win $ " + bet.getWinAmt());
+//                betBox.getChildren().addAll(game, betAmt, winAmt);
+//                betList.getChildren().add(betBox);
+//            }
+//
+//            userInfo.getChildren().addAll(userName, money);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//        labelView.setAlignment(Pos.CENTER);
+//
+//        VBox everything = new VBox(10);
+//        everything.getChildren().addAll(userInfo, labelView, betList);
+//
+//        Scene scene = new Scene(everything, 800, 800);
+//        stage.setScene(scene);
+//        stage.setTitle("Marauder Bets");
+//        stage.show();
+//
+//
     }
 } //end class Client
 

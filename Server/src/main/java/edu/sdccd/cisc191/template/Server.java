@@ -31,13 +31,15 @@ public class Server {
         String inputLine;
         while ((inputLine = in.readLine()) != null) {
             CustomerRequest request = CustomerRequest.fromJSON(inputLine);
+            System.out.println(request.toString());
             Game game1 = new Game("Team 1", "Team 2", new Date(2025, 2, 24));
             Game game2 = new Game("Team 3", "Team 4", new Date(2025, 2, 25));
             Game game3 = new Game("Team 5", "Team 6", new Date(2025, 3, 26));
 
-            Game[] response = {game1, game2, game3};
-            out.println(Arrays.toString(response));
-            System.out.println(Arrays.toString(response));
+            Game response = game1;
+            out.println(Game.toJSON(response));
+            System.out.println(response);
+            System.out.println(Game.toJSON(response));
             System.out.println(response.getClass());
         }
     }
@@ -53,7 +55,7 @@ public class Server {
         Server server = new Server();
         try {
             server.start(4444);
-            //server.stop();
+            server.stop();
         } catch(Exception e) {
             e.printStackTrace();
         }

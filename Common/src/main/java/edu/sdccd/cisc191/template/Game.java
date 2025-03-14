@@ -27,6 +27,7 @@ public class Game {
     }
 
     public static Game fromJSON(String input) throws Exception{
+        System.out.println(input);
         return objectMapper.readValue(input, Game.class);
     }
     protected Game() {}
