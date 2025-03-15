@@ -20,4 +20,11 @@ public class UserDatabase {
         public static synchronized List<User> getUserDatabase() {
             return userDatabase;
         }
+
+        // Returns string because we should only be calling this in ClientHandler, which deals only with JSON strings
+        public static synchronized String getSize() {
+
+            return String.valueOf(userDatabase.size());
+
+        }
 }

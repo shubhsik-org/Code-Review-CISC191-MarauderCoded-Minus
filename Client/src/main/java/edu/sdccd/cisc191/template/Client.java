@@ -38,6 +38,8 @@ public class Client extends Application {
     }
 
     // Do not use this method directly to ensure you get a proper response back
+    // Valid request types: "Game", "User", "GetSize"
+    // returnType parameter is just the expected return type
     private <T> T sendRequest(String requestType, int id, Class<T> returnType) throws Exception {
         out.println(CustomerRequest.toJSON(new CustomerRequest(requestType, id)));
         String response = in.readLine();
@@ -46,12 +48,16 @@ public class Client extends Application {
             return returnType.cast(Game.fromJSON(response));
         } else if (returnType == User.class) {
             return returnType.cast(User.fromJSON(response));
-        } else {
+        } else if (returnType == Integer.class) {
+            return returnType.cast(Integer.parseInt(response));
+        }
+        else {
             throw new IllegalArgumentException("Unsupported return type: " + returnType.getName());
         }
     }
 
     // Overload sendRequest method to handle modify requests
+    // Valid request types: "User"
     private <T> T sendRequest(String requestType, int id, Map<String, Object> modifiedAttributes, Class<T> returnType) throws Exception {
         out.println(CustomerRequest.toJSON(new CustomerRequest(requestType, id, modifiedAttributes)));
         String response = in.readLine();
@@ -101,8 +107,25 @@ public class Client extends Application {
         return null;
     }
 
+    // ID of 2 for userDatabase size and (TODO) ID of 1 for gameDatabase size
+    public int getSizeRequest(int id) throws IOException {
+
+        Client client = new Client();
+        try {
+            client.startConnection("localhost", 4444);
+            System.out.println("Sending getSizeRequest with ID: " + id);
+            return client.sendRequest("GetSize", id, Integer.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        stopConnection();
+        return -1;
+    };
+
     // Modifies a User with specified ID from the database
     // Takes a map object with the key being the field of the User and the value being the modded value
+    // Valid Keys to use in the Map "Name", "Money", "addBet" "removeBet"
     public User userModifyRequest(int id, Map<String, Object> modifiedAttributes) throws IOException {
         Client client = new Client();
         try {
@@ -142,13 +165,16 @@ public class Client extends Application {
                 userGetRequest(3),
                 userGetRequest(4),
         };
-        // Define the attributes to modify
+
+        // Test modification of user
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("Name", "John");
         attributes.put("Money", 9999);
         // Serialize Bet object into JSON string before sending to server
         attributes.put("addBet", Bet.toJSON(new Bet(response[0], 100)));
         System.out.println(userModifyRequest(2, attributes));
+
+        System.out.println(getSizeRequest(2));
 
 
 //        VBox labelView = new VBox(10);
