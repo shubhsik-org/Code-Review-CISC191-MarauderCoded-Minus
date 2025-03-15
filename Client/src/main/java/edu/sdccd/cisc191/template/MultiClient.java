@@ -16,9 +16,9 @@ public class MultiClient {
         client.stopConnection();
 
         // Create a thread pool for concurrent client requests
-        ExecutorService executor = Executors.newFixedThreadPool(200);
+        ExecutorService executor = Executors.newFixedThreadPool(2000);
         // Modify same user object using testRuns amount of times.
-        int testRuns = 300;
+        int testRuns = 3000;
         for (int i = 0; i < testRuns; i++) {
             executor.submit(() -> {
                 try {
