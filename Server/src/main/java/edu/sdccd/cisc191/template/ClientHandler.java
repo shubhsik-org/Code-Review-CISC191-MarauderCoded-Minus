@@ -41,9 +41,8 @@ class ClientHandler implements Runnable {
                 // Handles getSize calls. Everything is string because we deal with JSON strings.
                 if(Objects.equals(request.getRequestType(), "GetSize")) {
                     String response = "-1";
-                    //TODO: gameDatabase size
                     if(request.getId() == 1) {
-                        response = "-1";
+                        response = GameDatabase.getSize();
                     } else if(request.getId() == 2) {
                         response = UserDatabase.getSize();
                     }

@@ -56,8 +56,9 @@ public class Client extends Application {
         }
     }
 
-    // Overload sendRequest method to handle modify requests
+    // Overload sendRequest method to handle modify requests.
     // Valid request types: "User"
+    // Should only be on user because we run CRUD on GameDatabase through the server
     private <T> T sendRequest(String requestType, int id, Map<String, Object> modifiedAttributes, Class<T> returnType) throws Exception {
         out.println(CustomerRequest.toJSON(new CustomerRequest(requestType, id, modifiedAttributes)));
         String response = in.readLine();
@@ -176,6 +177,7 @@ public class Client extends Application {
 
         System.out.println(getSizeRequest(2));
 
+        System.out.println(getSizeRequest(1));
 
 //        VBox labelView = new VBox(10);
 //        HBox userInfo = new HBox(10);
