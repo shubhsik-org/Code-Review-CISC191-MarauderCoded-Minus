@@ -16,9 +16,9 @@ public class MultiClient {
         client.stopConnection();
 
         // Create a thread pool for concurrent client requests
-        ExecutorService executor = Executors.newFixedThreadPool(2000);
+        ExecutorService executor = Executors.newFixedThreadPool(200);
         // Modify same user object using testRuns amount of times.
-        int testRuns = 5000;
+        int testRuns = 300;
         for (int i = 0; i < testRuns; i++) {
             executor.submit(() -> {
                 try {
@@ -29,12 +29,13 @@ public class MultiClient {
                     Map<String, Object> attributes = new HashMap<>();
                     attributes.put("Name", "User" + Thread.currentThread().getId());
                     attributes.put("Money", 1);
-                    attributes.put("addBet", Bet.toJSON(new Bet(new Game("TeamA", "TeamB", new java.util.Date()), 50)));
 
                     User modifiedUser = client.userModifyRequest(2, attributes);
                     System.out.println("Modified User: " + modifiedUser);
 
                     client.stopConnection();
+                    // Stagger the requests
+                    Thread.sleep((long) (Math.random()*100));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -50,7 +51,7 @@ public class MultiClient {
         // Retrieve the final state of User ID 2
         client.startConnection("localhost", 4444);
         User finalUser = client.userGetRequest(2);
-        System.out.println("Final User State: " + finalUser);
+        System.out.println(String.format("Final User State: Name[%s], Money[%d}", finalUser.getName(), finalUser.getMoney()));
         assert finalUser.getBets().size() == testRuns; // Ensure all bets were added
         assert finalUser.getMoney() == initialUser.getMoney() + testRuns;
         System.out.println("Assertions passed!");

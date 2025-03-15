@@ -23,7 +23,7 @@ public class Server {
         try {
 
             // Server is listening on port 4444
-            serverSocket = new ServerSocket(4444);
+            serverSocket = new ServerSocket(4444, 4096);
             System.out.println("Server started on port 4444");
 
             // Allows the multi-threading to happen
