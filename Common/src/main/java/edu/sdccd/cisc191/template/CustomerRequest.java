@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CustomerRequest {
     private Integer id;
+    private String requestType;
 
     @JsonIgnore
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -16,19 +17,27 @@ public class CustomerRequest {
     }
     protected CustomerRequest() {}
 
-    public CustomerRequest(Integer id) {
+    public CustomerRequest(String requestType, Integer id) {
+        this.requestType = requestType;
         this.id = id;
     }
 
     @Override
     public String toString() {
         return String.format(
-                "GameID[id=%d]",
-                id);
+
+               """
+                Request Type: [type=%s]
+                RequestID: [id=%d]
+                """, requestType, id);
     }
 
     public Integer getId() {
         return id;
+    }
+
+    public String getRequestType() {
+        return requestType;
     }
 
     public void setId(Integer id) {

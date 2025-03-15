@@ -5,7 +5,6 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
 
 /**
  * This program opens a connection to a computer specified
@@ -32,27 +31,27 @@ public class MultiClient extends Application {
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
 
-    public Game sendRequest(int id) throws Exception {
-        out.println(CustomerRequest.toJSON(new CustomerRequest(id)));
-        return Game.fromJSON(in.readLine());
+    // Sends a request to the server.
+    // for Game type requests, the ID specifies the index of the game in GameDatabase(TBD)
+    // for User type requests, the ID specifies the index of the User in UserDatabase(TBD)
+    public Game sendRequest(String requestType, int id) throws Exception {
+
+        Client client = new Client();
+        try {
+            client.startConnection("localhost", 4444);
+            System.out.println("Sending gameRequest");
+            out.println(CustomerRequest.toJSON(new CustomerRequest(requestType, id)));
+            return Game.fromJSON(in.readLine());
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void stopConnection() throws IOException {
         in.close();
         out.close();
         clientSocket.close();
-    }
-
-    public Game accessServer(int id) {
-        MultiClient client = new MultiClient();
-        try {
-            client.startConnection("localhost", 4444);
-            System.out.println("Sending request");
-            return client.sendRequest(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public static void main(String[] args) {
@@ -83,7 +82,7 @@ class ClientThread extends Thread  {
         try {
             client.startConnection("localhost", 4444);
             System.out.println("Sending request from client: "+ clientNumber);
-            client.sendRequest(this.clientNumber);
+            client.sendRequest("Game", this.clientNumber);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -4,13 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Date;
-import java.util.Random;
 
 public class Game {
-//    private Integer id;
-//    private String firstName;
-//    private String lastName;
-
 
     private String team1;
     private String team2;

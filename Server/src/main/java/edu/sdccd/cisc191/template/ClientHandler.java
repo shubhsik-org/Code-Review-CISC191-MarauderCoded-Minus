@@ -6,11 +6,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
+import java.util.*;
 
-// ClientHandler class
+// Thread to handle clients
 class ClientHandler implements Runnable {
 
     private ServerSocket serverSocket;
@@ -18,31 +16,39 @@ class ClientHandler implements Runnable {
     private PrintWriter out;
     private BufferedReader in;
 
-    // Constructor
     public ClientHandler(Socket socket) {
         this.clientSocket = socket;
     }
 
+    // Discerns the type of client and then passes it on to the corresponding handler function
     public void run() {
+
         System.out.println("Passed duties on to ClientHandler...");
+
         try {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
             String inputLine;
-            // Server logic goes in here(as in processing the type of request received
-            // Positive IDs correspond to a getGame request
             while ((inputLine = in.readLine()) != null) {
                 CustomerRequest request = CustomerRequest.fromJSON(inputLine);
                 System.out.println(request.toString());
 
-                Game response = null;
-
-                if(request.getId() >= 0) {
-                    response = getGame(request);
+                if(Objects.equals(request.getRequestType(), "Game")) {
+                    Game response = null;
+                    if (request.getId() >= 0) {
+                        response = getGame(request);
+                    }
+                    out.println(Game.toJSON(response));
                 }
 
-                out.println(Game.toJSON(response));
+                else if (Objects.equals(request.getRequestType(), "User")) {
+                    User response = null;
+                    if(request.getId() >= 0) {
+                        response = getUser(request);
+                    }
+                    out.println(User.toJSON(response));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,6 +66,8 @@ class ClientHandler implements Runnable {
             }
         }
     }
+
+//BEGIN HANDLER FUNCTIONS
 
     // Gets the corresponding game that was requested
     private static Game getGame(CustomerRequest request) {
@@ -82,6 +90,28 @@ class ClientHandler implements Runnable {
             response = null;
         } else {
             response = gameDatabase.get(request.getId());
+        }
+        return response;
+    }
+
+    // Gets the corresponding User that was requested
+    private static User getUser(CustomerRequest request) {
+        User response;
+
+        ArrayList<User> userDatabase= new ArrayList<User>();
+        // Populate the userDatabase with fake data
+        int i = 0;
+        // Enter desired number of elements here
+        while (i < 5) {
+            userDatabase.add(new User(UUID.randomUUID().toString().replace("-", "").substring(0, 10), (int) (Math.random() * 1000)));
+            i += 1;
+        }
+
+        // Check if the ID is a valid User, then return
+        if (request.getId() >= userDatabase.size()) {
+            response = null;
+        } else {
+            response = userDatabase.get(request.getId());
         }
         return response;
     }
