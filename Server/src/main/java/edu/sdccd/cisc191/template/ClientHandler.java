@@ -1,16 +1,17 @@
 package edu.sdccd.cisc191.template;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
+import java.util.*;
 
-// ClientHandler class
+// Thread to handle clients
 class ClientHandler implements Runnable {
 
     private ServerSocket serverSocket;
@@ -18,32 +19,62 @@ class ClientHandler implements Runnable {
     private PrintWriter out;
     private BufferedReader in;
 
-    // Constructor
     public ClientHandler(Socket socket) {
         this.clientSocket = socket;
     }
-
+    
+    // Discerns the type of clientRequest and then passes it on to the corresponding handler function
     public void run() {
+        
         System.out.println("Passed duties on to ClientHandler...");
+        
         try {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
             String inputLine;
-            // Server logic goes in here(as in processing the type of request received
-            // Positive IDs correspond to a getGame request
             while ((inputLine = in.readLine()) != null) {
                 CustomerRequest request = CustomerRequest.fromJSON(inputLine);
                 System.out.println(request.toString());
 
-                Game response = null;
+                //BEGIN REQUEST DISCERNMENT
+                // Handles getSize calls. Everything is string because we deal with JSON strings.
+                if(Objects.equals(request.getRequestType(), "GetSize")) {
+                    String response = "-1";
+                    if(request.getId() == 1) {
+                        response = GameDatabase.getInstance().getSize();
+                    } else if(request.getId() == 2) {
+                        response = UserDatabase.getInstance().getSize();
+                    }
+                    out.println(response);
+                }
+                // Handles gameGetRequest calls
+                if(Objects.equals(request.getRequestType(), "Game")) {
+                    Game response = null;
+                    if (request.getId() >= 0) {
+                        response = getGame(request);
+                    }
+                    out.println(Game.toJSON(response));
+                } 
 
-                if(request.getId() >= 0) {
-                    response = getGame(request);
+                // Handles userGetRequest calls
+                else if (Objects.equals(request.getRequestType(), "User")) {
+                    User response = null;
+                    if(request.getId() >= 0) {
+                        response = getUser(request);
+                    }
+                    out.println(User.toJSON(response));
                 }
 
-                out.println(Game.toJSON(response));
-            }
+                // Handle ModifyUser request
+                else if (Objects.equals(request.getRequestType(), "ModifyUser")) {
+                    User response = null;
+                    if (request.getId() >= 0) {
+                       response = handleModifyUserRequest(request);
+                    }
+                    out.println(User.toJSON(response));
+                }
+            } // END REQUEST DISCERNMENT
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -61,22 +92,13 @@ class ClientHandler implements Runnable {
         }
     }
 
-    // Gets the corresponding game that was requested
+//BEGIN HANDLER FUNCTIONS
+    
+    // getGameRequest Handler
     private static Game getGame(CustomerRequest request) {
         Game response;
 
-        ArrayList<Game> gameDatabase= new ArrayList<Game>();
-        // Populate the gameDatabase with fake data
-        int count = 0; // To generate real looking data
-        int i = 0;
-
-        // Enter desired number of elements here
-        while (i < 5) {
-            gameDatabase.add(new Game(String.format("Team %d", count), String.format("Team %d", count + 1), new Date(2025 + count, count % 12, count % 12)));
-            count += 2;
-            i += 1;
-        }
-
+        List<Game> gameDatabase = GameDatabase.getInstance().getGameDatabase();
         // Check if the ID is a valid game, then return
         if (request.getId() >= gameDatabase.size()) {
             response = null;
@@ -84,5 +106,50 @@ class ClientHandler implements Runnable {
             response = gameDatabase.get(request.getId());
         }
         return response;
+    }
+
+    // getUserRequest Handler
+    private static User getUser(CustomerRequest request) {
+        User response;
+
+        List<User> userDatabase = UserDatabase.getInstance().getUserDatabase();
+        if (request.getId() >= userDatabase.size()) {
+            response = null;
+        } else {
+            response = userDatabase.get(request.getId());
+        }
+        return response;
+    }
+
+    private static synchronized User handleModifyUserRequest(CustomerRequest request) throws Exception {
+        UserDatabase db = UserDatabase.getInstance();
+        List<User> userDatabase = db.getUserDatabase();
+
+        // Locate the user
+        User userToModify = userDatabase.get(request.getId());
+
+        // Update Name or Money
+        Map<String, Object> attributes = request.getAttributesToModify();
+        if (attributes.containsKey("Name")) {
+            userToModify.setName((String) attributes.get("Name"));
+        }
+        if (attributes.containsKey("Money")) {
+            userToModify.setMoney((Integer) attributes.get("Money"));
+        }
+        // Update Bets by value
+        if (attributes.containsKey("addBet")) {
+            // De-serialize bet object so we can do modifications to it
+            userToModify.addBet(Bet.fromJSON((String) attributes.get("addBet")));
+        }
+        if (attributes.containsKey("removeBet")) {
+            // De-serialize bet object so we can do modifications to it
+            userToModify.removeBet(Bet.fromJSON((String) attributes.get("removeBet"))); // Removing a game by ID
+        }
+
+        db.saveToFile();
+
+        // Return the updated user
+        return userToModify;
+
     }
 }

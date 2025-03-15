@@ -4,13 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Date;
-import java.util.Random;
 
 public class Game {
-//    private Integer id;
-//    private String firstName;
-//    private String lastName;
-
 
     private String team1;
     private String team2;
@@ -18,7 +13,7 @@ public class Game {
     private double team1Odd;
     private double team2Odd;
 
-
+    //BEGIN MAKING CLASS SERIALIZABLE
     @JsonIgnore
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -31,6 +26,7 @@ public class Game {
         return objectMapper.readValue(input, Game.class);
     }
     protected Game() {}
+    //END MAKING CLASS SERIALIZABLE
 
     public Game(String t1, String t2, Date Date) {
         this.team1 = t1;

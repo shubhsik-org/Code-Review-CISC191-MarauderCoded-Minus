@@ -1,18 +1,16 @@
 package edu.sdccd.cisc191.template;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
-import javafx.geometry.Pos;
+import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.Scene;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
@@ -21,7 +19,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.text.DateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * This program opens a connection to a computer specified
@@ -49,9 +49,39 @@ public class Client extends Application {
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
 
-    public Game sendRequest(int id) throws Exception {
-        out.println(CustomerRequest.toJSON(new CustomerRequest(id)));
-        return Game.fromJSON(in.readLine());
+    // Do not use this method directly to ensure you get a proper response back
+    // Valid request types: "Game", "User", "GetSize"
+    // returnType parameter is just the expected return type
+    private <T> T sendRequest(String requestType, int id, Class<T> returnType) throws Exception {
+        out.println(CustomerRequest.toJSON(new CustomerRequest(requestType, id)));
+        String response = in.readLine();
+
+        if (returnType == Game.class) {
+            return returnType.cast(Game.fromJSON(response));
+        } else if (returnType == User.class) {
+            return returnType.cast(User.fromJSON(response));
+        } else if (returnType == Integer.class) {
+            return returnType.cast(Integer.parseInt(response));
+        }
+        else {
+            throw new IllegalArgumentException("Unsupported return type: " + returnType.getName());
+        }
+    }
+
+    // Overload sendRequest method to handle modify requests.
+    // Valid request types: "User"
+    // Should only be on user because we run CRUD on GameDatabase through the server
+    private <T> T sendRequest(String requestType, int id, Map<String, Object> modifiedAttributes, Class<T> returnType) throws Exception {
+        out.println(CustomerRequest.toJSON(new CustomerRequest(requestType, id, modifiedAttributes)));
+        String response = in.readLine();
+
+        if (returnType == Game.class) {
+            return returnType.cast(Game.fromJSON(response));
+        } else if (returnType == User.class) {
+            return returnType.cast(User.fromJSON(response));
+        } else {
+            throw new IllegalArgumentException("Unsupported return type: " + returnType.getName());
+        }
     }
 
     public void stopConnection() throws IOException {
@@ -59,17 +89,69 @@ public class Client extends Application {
         out.close();
         clientSocket.close();
     }
-    public Game accessServer(int id) {
+
+    // Gets game with specified ID from database
+    public Game gameGetRequest(int id) throws IOException {
         Client client = new Client();
         try {
             client.startConnection("localhost", 4444);
-            System.out.println("Sending request");
-            return client.sendRequest(id);
+            System.out.println("Sending gameGetRequest with ID: " + id);
+            return client.sendRequest("Game", id, Game.class);
         } catch(Exception e) {
             e.printStackTrace();
         }
+
+        stopConnection();
         return null;
     }
+
+    // Gets User with specified ID from database
+    public User userGetRequest(int id) throws IOException {
+        Client client = new Client();
+        try {
+            client.startConnection("localhost", 4444);
+            System.out.println("Sending userRequest with ID: " + id);
+            return client.sendRequest("User", id, User.class);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        stopConnection();
+        return null;
+    }
+
+    // ID of 2 for userDatabase size and (TODO) ID of 1 for gameDatabase size
+    public int getSizeRequest(int id) throws IOException {
+
+        Client client = new Client();
+        try {
+            client.startConnection("localhost", 4444);
+            System.out.println("Sending getSizeRequest with ID: " + id);
+            return client.sendRequest("GetSize", id, Integer.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        stopConnection();
+        return -1;
+    };
+
+    // Modifies a User with specified ID from the database
+    // Takes a map object with the key being the field of the User and the value being the modded value
+    // Valid Keys to use in the Map "Name", "Money", "addBet" "removeBet"
+    public User userModifyRequest(int id, Map<String, Object> modifiedAttributes) throws IOException {
+        Client client = new Client();
+        try {
+            client.startConnection("localhost", 4444);
+            System.out.println("Sending userModifyRequest with ID: " + id);
+            return client.sendRequest("ModifyUser", id, modifiedAttributes, User.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        stopConnection();
+        return null;
+    }
+
 
     public static void main(String[] args) {
         launch();// Run this Application.
@@ -82,21 +164,32 @@ public class Client extends Application {
 
 
         Game[] response = new Game[]{
-                accessServer(0),
-                accessServer(1),
-                accessServer(2),
-                accessServer(3),
-                accessServer(4),
+                gameGetRequest(0),
+                gameGetRequest(1),
+                gameGetRequest(2),
+                gameGetRequest(3),
+                gameGetRequest(4),
         };
 
         User[] users = new User[]{
-                new User("Andy", 129030),
-                new User("Mahad", 214923),
-                new User("Julian", 324960),
-                new User("Brian", 492313),
-
+                userGetRequest(0),
+                userGetRequest(1),
+                userGetRequest(2),
+                userGetRequest(3),
+                userGetRequest(4),
         };
 
+        // Test modification of user
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("Name", "John");
+        attributes.put("Money", 9999);
+        // Serialize Bet object into JSON string before sending to server
+        attributes.put("addBet", Bet.toJSON(new Bet(response[0], 100)));
+        System.out.println(userModifyRequest(2, attributes));
+
+        System.out.println(getSizeRequest(2));
+
+        System.out.println(getSizeRequest(1));
 
         VBox labelView = new VBox(10);
         HBox userInfo = new HBox(10);
