@@ -1,90 +1,59 @@
 package edu.sdccd.cisc191.template;
 
-import javafx.application.Application;
-import javafx.stage.Stage;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import java.io.*;
-import java.net.Socket;
+public class MultiClient {
+    public static void main(String[] args) throws Exception {
 
-/**
- * This program opens a connection to a computer specified
- * as the first command-line argument.  If no command-line
- * argument is given, it prompts the user for a computer
- * to connect to.  The connection is made to
- * the port specified by LISTENING_PORT.  The program reads one
- * line of text from the connection and then closes the
- * connection.  It displays the text that it read on
- * standard output.  This program is meant to be used with
- * the server program, DateServer, which sends the current
- * date and time on the computer where the server is running.
- */
-
-public class MultiClient extends Application {
-
-    private Socket clientSocket;
-    private PrintWriter out;
-    private BufferedReader in;
-
-    public void startConnection(String ip, int port) throws IOException {
-        clientSocket = new Socket(ip, port);
-        out = new PrintWriter(clientSocket.getOutputStream(), true);
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-    }
-
-    // Sends a request to the server.
-    // for Game type requests, the ID specifies the index of the game in GameDatabase(TBD)
-    // for User type requests, the ID specifies the index of the User in UserDatabase(TBD)
-    public Game sendRequest(String requestType, int id) throws Exception {
-
+        // Log intial user state
         Client client = new Client();
-        try {
-            client.startConnection("localhost", 4444);
-            System.out.println("Sending gameGetRequest");
-            out.println(CustomerRequest.toJSON(new CustomerRequest(requestType, id)));
-            return Game.fromJSON(in.readLine());
-        } catch(Exception e) {
-            e.printStackTrace();
+        client.startConnection("localhost", 4444);
+        User initialUser = client.userGetRequest(2);
+        System.out.println("Initial User State: " + initialUser);
+        client.stopConnection();
+
+        // Create a thread pool for concurrent client requests
+        ExecutorService executor = Executors.newFixedThreadPool(2000);
+        // Modify same user object using testRuns amount of times.
+        int testRuns = 5000;
+        for (int i = 0; i < testRuns; i++) {
+            executor.submit(() -> {
+                try {
+
+                    client.startConnection("localhost", 4444);
+
+                    // Modify User ID 2 with a unique modification
+                    Map<String, Object> attributes = new HashMap<>();
+                    attributes.put("Name", "User" + Thread.currentThread().getId());
+                    attributes.put("Money", 1);
+                    attributes.put("addBet", Bet.toJSON(new Bet(new Game("TeamA", "TeamB", new java.util.Date()), 50)));
+
+                    User modifiedUser = client.userModifyRequest(2, attributes);
+                    System.out.println("Modified User: " + modifiedUser);
+
+                    client.stopConnection();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         }
-        return null;
-    }
 
-    public void stopConnection() throws IOException {
-        in.close();
-        out.close();
-        clientSocket.close();
-    }
-
-    public static void main(String[] args) {
-        launch();// Run this Application.
-    }
-
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        MultiClient client = new MultiClient();
-        int numClients = 10;
-        for (int i = 0; i < numClients; i++) {
-            new ClientThread(i).start();
+        // Shut down the executor after tasks complete
+        executor.shutdown();
+        while (!executor.isTerminated()) {
+            // Wait for all tasks to finish
         }
-    }
-}
 
-class ClientThread extends Thread  {
-    private int clientNumber;
-
-    public ClientThread(int clientNumber) {
-        this.clientNumber = clientNumber;
-    }
-
-    public void run() {
-
-        MultiClient client = new MultiClient();
-        try {
-            client.startConnection("localhost", 4444);
-            System.out.println("Sending request from client: "+ clientNumber);
-            client.sendRequest("Game", this.clientNumber);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // Retrieve the final state of User ID 2
+        client.startConnection("localhost", 4444);
+        User finalUser = client.userGetRequest(2);
+        System.out.println("Final User State: " + finalUser);
+        assert finalUser.getBets().size() == testRuns; // Ensure all bets were added
+        assert finalUser.getMoney() == initialUser.getMoney() + testRuns;
+        System.out.println("Assertions passed!");
+        client.stopConnection();
     }
 }

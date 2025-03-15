@@ -92,30 +92,13 @@ class ClientHandler implements Runnable {
         }
     }
 
-//BEGIN DATABASE FUNCTIONS
-
-    private static ArrayList<Game> populateGameDatabase(int numberOfGames) {
-    ArrayList<Game> gameDatabase= new ArrayList<Game>();
-    // Populate the gameDatabase with fake data
-    int count = 0; // To generate real looking data
-
-    // Enter desired number of elements here
-        for(int i = 0; i < numberOfGames; i++) {
-            gameDatabase.add(new Game(String.format("Team %d", count), String.format("Team %d", count + 1), new Date(2025 + count, count % 12, count % 12)));
-            count += 2;
-        }
-        return gameDatabase;
-    }
-
-
-
 //BEGIN HANDLER FUNCTIONS
     
     // getGameRequest Handler
     private static Game getGame(CustomerRequest request) {
         Game response;
 
-        ArrayList<Game> gameDatabase = populateGameDatabase(5);
+        List<Game> gameDatabase = GameDatabase.getGameDatabase();
         // Check if the ID is a valid game, then return
         if (request.getId() >= gameDatabase.size()) {
             response = null;
@@ -138,9 +121,8 @@ class ClientHandler implements Runnable {
         return response;
     }
 
-    private static User handleModifyUserRequest(CustomerRequest request) throws Exception {
+    private static synchronized User handleModifyUserRequest(CustomerRequest request) throws Exception {
 
-        User response;
         List<User> userDatabase = UserDatabase.getUserDatabase();
 
         // Locate the user
