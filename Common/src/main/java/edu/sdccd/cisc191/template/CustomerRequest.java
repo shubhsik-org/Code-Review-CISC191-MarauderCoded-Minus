@@ -1,12 +1,17 @@
 package edu.sdccd.cisc191.template;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CustomerRequest {
+    private Map<String,Object> attributesToModify;
     private Integer id;
     private String requestType;
 
+    //BEGIN MAKING CLASS SERIALIZABLE
     @JsonIgnore
     private static final ObjectMapper objectMapper = new ObjectMapper();
     public static String toJSON(CustomerRequest customer) throws Exception {
@@ -16,10 +21,24 @@ public class CustomerRequest {
         return objectMapper.readValue(input, CustomerRequest.class);
     }
     protected CustomerRequest() {}
+    //END MAKING CLASS SERIALIZABLE
 
     public CustomerRequest(String requestType, Integer id) {
         this.requestType = requestType;
         this.id = id;
+        this.attributesToModify = new HashMap<>();
+    }
+
+    // Constructor for modify requests
+    public CustomerRequest(String requestType, int id, Map<String, Object> attributesToModify) {
+        this.requestType = requestType;
+        this.id = id;
+        this.attributesToModify = attributesToModify;
+    }
+
+    // Getters and Setters
+    public Map<String, Object> getAttributesToModify() {
+        return attributesToModify;
     }
 
     @Override

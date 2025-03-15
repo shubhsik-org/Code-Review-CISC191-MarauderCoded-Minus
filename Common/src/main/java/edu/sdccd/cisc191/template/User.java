@@ -1,6 +1,8 @@
 package edu.sdccd.cisc191.template;
 
 import java.util.ArrayList;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -9,6 +11,7 @@ public class User {
     private int money;
     private ArrayList<Bet> bets = new ArrayList<>();
 
+    //BEGIN MAKING CLASS SERIALIZABLE
     @JsonIgnore
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -22,12 +25,12 @@ public class User {
     }
 
     protected User() {}
+    //END MAKING CLASS SERIALIZABLE
 
     public User(String name, int money) {
         this.name = name;
         this.money = money;
     }
-
 
     public String getName() {
         return name;
@@ -43,6 +46,10 @@ public class User {
 
     public void addBet(Bet b) {
         bets.add(b);
+    }
+
+    public void removeBet(Bet b) {
+        bets.remove(b);
     }
 
     public void setMoney(int amt) {

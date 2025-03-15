@@ -13,7 +13,7 @@ public class Game {
     private double team1Odd;
     private double team2Odd;
 
-
+    //BEGIN MAKING CLASS SERIALIZABLE
     @JsonIgnore
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -26,6 +26,7 @@ public class Game {
         return objectMapper.readValue(input, Game.class);
     }
     protected Game() {}
+    //END MAKING CLASS SERIALIZABLE
 
     public Game(String t1, String t2, Date Date) {
         this.team1 = t1;

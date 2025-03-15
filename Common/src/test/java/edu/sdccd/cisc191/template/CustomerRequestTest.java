@@ -7,7 +7,7 @@ class CustomerRequestTest {
 
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
-        customerRequest = new CustomerRequest(1);
+        customerRequest = new CustomerRequest("Game", 1);
     }
 
     @org.junit.jupiter.api.Test

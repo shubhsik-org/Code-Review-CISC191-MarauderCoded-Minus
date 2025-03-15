@@ -39,7 +39,7 @@ public class MultiClient extends Application {
         Client client = new Client();
         try {
             client.startConnection("localhost", 4444);
-            System.out.println("Sending gameRequest");
+            System.out.println("Sending gameGetRequest");
             out.println(CustomerRequest.toJSON(new CustomerRequest(requestType, id)));
             return Game.fromJSON(in.readLine());
         } catch(Exception e) {
