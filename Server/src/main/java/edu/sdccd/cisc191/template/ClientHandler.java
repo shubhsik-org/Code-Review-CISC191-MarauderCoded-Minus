@@ -42,9 +42,9 @@ class ClientHandler implements Runnable {
                 if(Objects.equals(request.getRequestType(), "GetSize")) {
                     String response = "-1";
                     if(request.getId() == 1) {
-                        response = GameDatabase.getSize();
+                        response = GameDatabase.getInstance().getSize();
                     } else if(request.getId() == 2) {
-                        response = UserDatabase.getSize();
+                        response = UserDatabase.getInstance().getSize();
                     }
                     out.println(response);
                 }
@@ -98,7 +98,7 @@ class ClientHandler implements Runnable {
     private static Game getGame(CustomerRequest request) {
         Game response;
 
-        List<Game> gameDatabase = GameDatabase.getGameDatabase();
+        List<Game> gameDatabase = GameDatabase.getInstance().getGameDatabase();
         // Check if the ID is a valid game, then return
         if (request.getId() >= gameDatabase.size()) {
             response = null;
@@ -112,7 +112,7 @@ class ClientHandler implements Runnable {
     private static User getUser(CustomerRequest request) {
         User response;
 
-        List<User> userDatabase = UserDatabase.getUserDatabase();
+        List<User> userDatabase = UserDatabase.getInstance().getUserDatabase();
         if (request.getId() >= userDatabase.size()) {
             response = null;
         } else {
@@ -122,8 +122,8 @@ class ClientHandler implements Runnable {
     }
 
     private static synchronized User handleModifyUserRequest(CustomerRequest request) throws Exception {
-
-        List<User> userDatabase = UserDatabase.getUserDatabase();
+        UserDatabase db = UserDatabase.getInstance();
+        List<User> userDatabase = db.getUserDatabase();
 
         // Locate the user
         User userToModify = userDatabase.get(request.getId());
@@ -145,6 +145,8 @@ class ClientHandler implements Runnable {
             // De-serialize bet object so we can do modifications to it
             userToModify.removeBet(Bet.fromJSON((String) attributes.get("removeBet"))); // Removing a game by ID
         }
+
+        db.saveToFile();
 
         // Return the updated user
         return userToModify;
