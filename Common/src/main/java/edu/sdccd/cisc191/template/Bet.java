@@ -18,7 +18,7 @@ public class Bet {
     }
 
     public static Bet fromJSON(String input) throws Exception {
-        System.out.println(input);
+        // System.out.println(input);
         return objectMapper.readValue(input, Bet.class);
     }
 

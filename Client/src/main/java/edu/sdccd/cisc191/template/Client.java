@@ -180,7 +180,7 @@ public class Client extends Application {
                 userGetRequest(3),
                 userGetRequest(4),
         };
-
+/* BEGIN EXAMPLES OF HOW TO USE THE SERVER
         // Test modification of user
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("Name", "John");
@@ -192,7 +192,10 @@ public class Client extends Application {
         System.out.println(getSizeRequest(2));
 
         System.out.println(getSizeRequest(1));
+        END EXAMPLES OF HOW TO USE THE SERVER
+ */
 
+        // BEGIN CLIENT VIEW CODE
         VBox labelView = new VBox(10);
         HBox userInfo = new HBox(10);
         VBox betList = new VBox(10);
@@ -205,7 +208,7 @@ public class Client extends Application {
 
         TableView tableView = new TableView();
 
-
+        // Describes a table with the games displayed
         TableColumn<Game, String> team1 = new TableColumn<>("Team 1");
         team1.setCellValueFactory(new PropertyValueFactory<>("team1"));
         tableView.getColumns().add(team1);
@@ -221,14 +224,23 @@ public class Client extends Application {
         team2.setReorderable(false);
 
 
-        TableColumn<String, String> date = new TableColumn<>("Date");
-        date.setPrefWidth(500);
-        date.setCellValueFactory(new PropertyValueFactory<>("date"));
-        tableView.getColumns().add(date);
-        date.setResizable(false);
-        date.setReorderable(false);
-        date.setSortable(false);
-        date.setPrefWidth(250);
+        TableColumn<String, String> startDate = new TableColumn<>("Start Date");
+        startDate.setPrefWidth(500);
+        startDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+        tableView.getColumns().add(startDate);
+        startDate.setResizable(false);
+        startDate.setReorderable(false);
+        startDate.setSortable(false);
+        startDate.setPrefWidth(250);
+
+        TableColumn<String, String> endDate = new TableColumn<>("End Date");
+        endDate.setPrefWidth(500);
+        endDate.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+        tableView.getColumns().add(endDate);
+        endDate.setResizable(false);
+        endDate.setReorderable(false);
+        endDate.setSortable(false);
+        endDate.setPrefWidth(250);
 
         TableColumn<String, String> team1Odd = new TableColumn<>("Team 1 Odds");
         team1Odd.setCellValueFactory(new PropertyValueFactory<>("team1Odd"));

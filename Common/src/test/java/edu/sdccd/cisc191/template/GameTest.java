@@ -9,7 +9,7 @@ class GameTest {
 
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
-        customerResponse = new Game("User", "Test", new Date(2025, 3, 24));
+        customerResponse = new Game("User", "Test", new Date(), new Date(2025, 3, 24));
     }
 
     @org.junit.jupiter.api.Test

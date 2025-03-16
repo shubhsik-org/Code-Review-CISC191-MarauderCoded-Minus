@@ -67,7 +67,7 @@ public class GameDatabase {
         for (int i = 0; i < 6; i++) {
             gameDatabase.add(new Game(
                     String.format("Team %d", count),
-                    String.format("Team %d", count + 1),
+                    String.format("Team %d", count + 1), new Date(),
                     new Date(2025 + count, count % 12, count % 12)));
             count += 2;
         }

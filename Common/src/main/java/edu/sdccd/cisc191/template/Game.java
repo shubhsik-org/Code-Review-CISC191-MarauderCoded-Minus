@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class Game {
 
     private String team1;
     private String team2;
-    private Date date;
+    private Date startDate;
+    private Date endDate;
     private double team1Odd;
     private double team2Odd;
 
@@ -22,26 +24,69 @@ public class Game {
     }
 
     public static Game fromJSON(String input) throws Exception{
-        System.out.println(input);
+        // System.out.println(input);
         return objectMapper.readValue(input, Game.class);
     }
     protected Game() {}
     //END MAKING CLASS SERIALIZABLE
-
-    public Game(String t1, String t2, Date Date) {
+    //Easy constructor to use to mock odds data
+    public Game(String t1, String t2, Date startDate, Date endDate) {
         this.team1 = t1;
         this.team2 = t2;
-        this.date = Date;
+        this.startDate = startDate;
+        this.endDate = endDate;
 
         this.team1Odd = Math.round(Math.random() * 100);
         this.team2Odd = Math.round(Math.random() * 100);
     }
+    // Constructor to use if we are loading game from API
+    public Game(String t1, String t2, Date startDate, Date endDate, double team1Odd, double team2Odd) {
+        this.team1 = t1;
+        this.team2 = t2;
+        this.startDate = startDate;
+        this.endDate = endDate;
+
+        this.team1Odd = team1Odd;
+        this.team2Odd = team2Odd;
+    }
 
     @Override
     public String toString() {
-        return team1 + " vs. " + team2 + " on " + date.getMonth() + "/" + date.getDate() + "/" + date.getYear();
+        return team1 + " vs. " + team2 + " on " + startDate.getMonth() + "/" + startDate.getDate() + "/" + startDate.getYear();
     }
 
+    // Overriding equals method so we can compare game objects
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Game game = (Game) obj;
+
+        boolean team1Equals = Objects.equals(this.team1, game.getTeam1());
+        boolean team2Equals = Objects.equals(this.team2, game.getTeam2());
+        boolean startDateEquals = this.startDate.compareTo(game.getStartDate()) == 0; // compareTo method is proper for comparing dates
+        boolean endDateEquals = this.endDate.compareTo(game.getEndDate()) == 0;
+        boolean team1OddEquals = Math.abs(this.team1Odd - game.getTeam1Odd()) < 0.0001; // Account for potenional floating point error
+        boolean team2OddEquals = Math.abs(this.team2Odd - game.getTeam2Odd()) < 0.0001;
+
+        boolean result = team1Equals && team2Equals && startDateEquals && endDateEquals && team1OddEquals && team2OddEquals;
+
+        System.out.println("Comparing games: " + this + " and " + game);
+        System.out.println("team1Equals: " + team1Equals);
+        System.out.println("team2Equals: " + team2Equals);
+        System.out.println("startDateEquals: " + startDateEquals);
+        System.out.println("endDateEquals: " + endDateEquals);
+        System.out.println("team1OddEquals: " + team1OddEquals);
+        System.out.println("team2OddEquals: " + team2OddEquals);
+        System.out.println("Result: " + result);
+
+        return result;
+    }
     public String getTeam1() {
         return team1;
     }
@@ -58,8 +103,12 @@ public class Game {
         return team2Odd;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
     }
 
     public void setTeam1(String team1) {
@@ -70,8 +119,12 @@ public class Game {
         this.team2 = team2;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
 }

@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class User {
     private String name;
     private int money;
+    // TODO: Check by using this list instead of looping through all bets on the table.
+    // We are doing wayy too many checks right now.
     private ArrayList<Bet> bets = new ArrayList<>();
 
     //BEGIN MAKING CLASS SERIALIZABLE
@@ -20,7 +22,7 @@ public class User {
     }
 
     public static User fromJSON(String input) throws Exception {
-        System.out.println(input);
+        //System.out.println(input);
         return objectMapper.readValue(input, User.class);
     }
 
@@ -34,7 +36,9 @@ public class User {
 
     public boolean checkBet(Game game) {
         for (Bet bet : bets) {
-            if (bet.getGame() == game) {
+            boolean result = bet.getGame().equals(game);
+            System.out.println("Checking bet: " + bet.getGame() + " with game: " + game + " Result: " + result);
+            if (result) {
                 return true;
             }
         }
