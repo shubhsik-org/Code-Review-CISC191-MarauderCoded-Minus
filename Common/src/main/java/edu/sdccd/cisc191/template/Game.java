@@ -50,6 +50,34 @@ public class Game {
         this.team2Odd = team2Odd;
     }
 
+    //Calculating odds with American betting odds using pool of money
+    /*
+    public Game(String t1, String t2, Date startDate, Date endDate, double team1Odd, double team2Odd, double pool) {
+       this.team1Wager = 80;
+       this.team2Wager = 20;
+       this.betPool = team1Wager + team2Wager;
+
+       this.team1PayoutRatio = betPool / team1Wager;
+       this.team2PayoutRatio = betPool / team2Wager;
+
+       this.team1ProfitFactor = team1PayoutRatio - 1;
+       this.team2ProfitFactor = team2PayoutRatio - 1;
+
+       if (team1ProfitFactor >= 1) {
+            this.team1Odd = +(team1ProfitFactor * 100);
+       }
+       else {
+            this.team1Odd = -(100/team1ProfitFactor);
+       }
+       if (this.team2ProfitFactor >= 1) {
+            this.team2Odd = +(team2ProfitFactor * 100);
+       }
+       else {
+            this.team2Odd = -(100/team2ProfitFactor);
+       }
+    }
+    */
+
     @Override
     public String toString() {
         return team1 + " vs. " + team2 + " on " + startDate.getMonth() + "/" + startDate.getDate() + "/" + startDate.getYear();

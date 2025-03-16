@@ -7,7 +7,7 @@ public class Bet {
     private Game game;
     private int betAmt;
     private int winAmt;
-    public float winodd;
+    public double winOdds;
 
     //BEGIN MAKING CLASS SERIALIZABLE
     @JsonIgnore
@@ -25,10 +25,21 @@ public class Bet {
     protected Bet() {}
     //END MAKING CLASS SERIALIZABLE
 
+    //Betting entry and return calculations
     public Bet(Game g, int amt) {
         this.game = g;
         this.betAmt = amt;
         this.winAmt = (int) (amt * 1.5);
+
+    /*
+        this.winOdds = odds;
+       if (winOdds >= 0) {
+           this.winAmt = (int) (amt + (odds / 100) * amt);
+       }
+       else {
+           this.winAmt = (int) (amt + (100 / Math.abs(odds)) * amt);
+       }
+    */
     }
 
     public int getWinAmt() {
