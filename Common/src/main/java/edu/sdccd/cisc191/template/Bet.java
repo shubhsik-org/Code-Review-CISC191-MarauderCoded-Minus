@@ -56,7 +56,7 @@ public class Bet {
     }
 
     public String toString() {
-        return "Bet on " + game.toString() + " for " + betAmt;
+        return "Bet on " + game + " for " + betAmt;
     }
 
 }

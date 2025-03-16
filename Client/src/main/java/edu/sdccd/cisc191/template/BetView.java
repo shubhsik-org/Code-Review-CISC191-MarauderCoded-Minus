@@ -12,9 +12,10 @@ import javafx.scene.control.Button;
 public class BetView extends Application {
     Game game;
 
+
     public void betView(Stage stage, Game game) throws Exception {
         this.game = game;
-        this.start(stage);
+        start(stage);
     }
 
     @Override
@@ -29,7 +30,6 @@ public class BetView extends Application {
         b1.setOnAction(evt -> {
             Bet placedBet = new Bet(game, Integer.parseInt(b.getText()));
             Client.user.addBet(placedBet);
-            System.out.println(placedBet.toString());
             try {
                 new Client().start(stage);
             } catch (Exception e) {

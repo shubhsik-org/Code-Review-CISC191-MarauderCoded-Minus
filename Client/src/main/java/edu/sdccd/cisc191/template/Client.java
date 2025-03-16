@@ -3,25 +3,25 @@ package edu.sdccd.cisc191.template;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.stage.Stage;
 
+import javax.security.auth.callback.Callback;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.text.DateFormat;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This program opens a connection to a computer specified
@@ -160,9 +160,10 @@ public class Client extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+
         BorderPane borderPane = new BorderPane();
 
-
+        // TODO: update this so it can just pull all of the games at once, because what if there are more than 5 upcoming games? either that or have a server method that's the number of upcoming games, then update the assignment of this array to be a for loop that counts up and calls gameGetRequest
         Game[] response = new Game[]{
                 gameGetRequest(0),
                 gameGetRequest(1),
@@ -171,6 +172,7 @@ public class Client extends Application {
                 gameGetRequest(4),
         };
 
+        // TODO: see comment with Game[] response
         User[] users = new User[]{
                 userGetRequest(0),
                 userGetRequest(1),
@@ -194,82 +196,159 @@ public class Client extends Application {
         VBox labelView = new VBox(10);
         HBox userInfo = new HBox(10);
         VBox betList = new VBox(10);
+        betList.setPrefHeight(200);
+
         VBox botsBox = new VBox(10);
 
+        botsBox.setPrefWidth(300);
         botsBox.setPadding(new Insets(1));
 
-        // Populates the games into to the GUI
-        try {
+        TableView tableView = new TableView();
 
-            for (Game game : response) {
-                HBox gameBox = new HBox(10); // Encapsulating HBox for all of the labels and buttons about a game
 
-                HBox versusBox = new HBox(5); // Encapsulating all the labels (teams, date) about a game
+        TableColumn<Game, String> team1 = new TableColumn<>("Team 1");
+        team1.setCellValueFactory(new PropertyValueFactory<>("team1"));
+        tableView.getColumns().add(team1);
+        team1.setResizable(false);
+        team1.setSortable(false);
+        team1.setReorderable(false);
 
-                // Label for the first team
-                Label team1 = new Label(game.getTeam1());
-                team1.setTextFill(Color.color(1, 0, 0));
-                team1.setStyle("-fx-font-weight: bold");
+        TableColumn<Game, String> team2 = new TableColumn<>("Team 2");
+        team2.setCellValueFactory(new PropertyValueFactory<>("team2"));
+        tableView.getColumns().add(team2);
+        team2.setResizable(false);
+        team2.setSortable(false);
+        team2.setReorderable(false);
 
-                Label vs = new Label("vs. ");
 
-                // Label for the second team
-                Label team2 = new Label(game.getTeam2());
-                team2.setTextFill(Color.color(0, 0, 1));
-                team2.setStyle("-fx-font-weight: bold");
+        TableColumn<String, String> date = new TableColumn<>("Date");
+        date.setPrefWidth(500);
+        date.setCellValueFactory(new PropertyValueFactory<>("date"));
+        tableView.getColumns().add(date);
+        date.setResizable(false);
+        date.setReorderable(false);
+        date.setSortable(false);
+        date.setPrefWidth(250);
 
-                Locale loc = new Locale("en", "US");
-                DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, loc);
-                String stringDate = dateFormat.format(game.getDate());
+        TableColumn<String, String> team1Odd = new TableColumn<>("Team 1 Odds");
+        team1Odd.setCellValueFactory(new PropertyValueFactory<>("team1Odd"));
+        tableView.getColumns().add(team1Odd);
+        team1Odd.setResizable(false);
+        team1Odd.setSortable(false);
+        team1Odd.setReorderable(false);
 
-                // Label for the date
-                Label date = new Label(stringDate);
-                date.setTextFill(Color.rgb(117, 117, 117));
 
-                // Place the team 1, team 2 and date labels into the label box
-                gameBox.getChildren().addAll(team1, vs, team2, date);
 
-                HBox betBox = new HBox(5); // Encapsulating HBox for Bet action buttons
+        TableColumn<Game, Void> bet1Column = new TableColumn<>("Bet");
+        bet1Column.setCellFactory(column -> new TableCell<Game, Void>() {
+            private final Button betButton = new Button("Bet");
 
-                // Button to bet on the first team
-                Button betTeam1 = new Button("Bet " + game.getTeam1());
-                betTeam1.setOnAction(evt -> {
-                    try {
-                        new BetView().betView(stage, game);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
+            {
+                // Set up the button action here, but don't retrieve the game yet.
+                betButton.setOnAction(event -> {
+                    // Retrieve the Game object at the time of the button click.
+                    int index = getIndex();
+                    if (index >= 0 && index < getTableView().getItems().size()) {
+                        Game game = getTableView().getItems().get(index);
+                        if (user.checkBet(game)) {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Cannot bet");
+                            alert.setHeaderText("Cannot bet on this game");
+                            alert.setContentText("You've already bet on this game.");
+                            alert.showAndWait();
+                        }
+                        try {
+                            new BetView().betView(stage, game);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 });
-
-                Label team1Odds = new Label(game.getTeam1Odd() + "%");
-
-                // Button to bet on the second team
-                Button betTeam2 = new Button("Bet " + game.getTeam2());
-                betTeam2.setOnAction(evt -> {
-                    try {
-                        new BetView().betView(stage, game);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-                // From Andy - Julian, what is this for loop doing? What is it supposed to check?
-                for (Bet bet : user.getBets()) {
-                    System.out.println("Checking bet: " + bet.getGame());
-                    if (bet.getGame().equals(game)) {
-                        System.out.println("Match found! Disabling buttons.");
-                        betTeam1.setDisable(true);
-                        betTeam2.setDisable(true);
-                    }
-                }
-                Label team2Odds = new Label(game.getTeam2Odd() + "%");
-
-
-                betBox.getChildren().addAll(betTeam1, team1Odds, betTeam2, team2Odds); // Add the bet buttons to the encapsulating HBox
-
-                gameBox.getChildren().addAll(versusBox, betBox); // Add everything involving the game (labels, bet buttons) to a row
-
-                labelView.getChildren().add(gameBox); // Add new row to the list of upcoming games
             }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    // Now that the cell is associated with the table, get the Game object safely.
+                    int index = getIndex();
+                    if (index >= 0 && index < getTableView().getItems().size()) {
+                        Game game = getTableView().getItems().get(index);
+                        // Update button state (for example, disable if user already bet)
+                        betButton.setDisable(user.checkBet(game));
+                    }
+                    setGraphic(betButton);
+                }
+            }
+        });
+        tableView.getColumns().add(bet1Column);
+        bet1Column.setResizable(false);
+        bet1Column.setReorderable(false);
+        bet1Column.setSortable(false);
+
+
+
+
+
+        TableColumn<Game, String> team2Odd = new TableColumn<>("Team 2 Odds");
+        team2Odd.setCellValueFactory(new PropertyValueFactory<>("team2Odd"));
+        tableView.getColumns().add(team2Odd);
+        team2Odd.setResizable(false);
+        team2Odd.setSortable(false);
+        team2Odd.setReorderable(false);
+
+
+        TableColumn<Game, Void> bet2Column = new TableColumn<>("Bet");
+        bet2Column.setCellFactory(column -> new TableCell<Game, Void>() {
+            private final Button betButton = new Button("Bet");
+
+            {
+                // Set up the button action here, but don't retrieve the game yet.
+                betButton.setOnAction(event -> {
+                    // Retrieve the Game object at the time of the button click.
+                    int index = getIndex();
+                    if (index >= 0 && index < getTableView().getItems().size()) {
+                        Game game = getTableView().getItems().get(index);
+                        try {
+                            new BetView().betView(stage, game);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    // Now that the cell is associated with the table, get the Game object safely.
+                    int index = getIndex();
+                    if (index >= 0 && index < getTableView().getItems().size()) {
+                        Game game = getTableView().getItems().get(index);
+                        // Update button state (for example, disable if user already bet)
+                        betButton.setDisable(user.checkBet(game));
+                    }
+                    setGraphic(betButton);
+                }
+            }
+        });
+        tableView.getColumns().add(bet2Column);
+        bet2Column.setResizable(false);
+        bet2Column.setReorderable(false);
+        bet2Column.setSortable(false);
+
+
+
+        for (Game game : response) {
+            tableView.getItems().add(game);
+        }
+
+        try {
 
             userInfo.setBackground(Background.fill(Color.rgb(45, 51, 107)));
             Label userName = new Label(user.getName());
@@ -290,13 +369,19 @@ public class Client extends Application {
             }
 
 
-            for (Bet bet : user.getBets()) {
-                HBox betBox = new HBox(10);
-                Label game = new Label(bet.getGame().toString());
-                Label betAmt = new Label("Bet $" + bet.getBetAmt());
-                Label winAmt = new Label("Win $ " + bet.getWinAmt());
-                betBox.getChildren().addAll(game, betAmt, winAmt);
-                betList.getChildren().add(betBox);
+            if (user.getBets().isEmpty()) {
+                Label emptyLabel = new Label("Your bets will appear here");
+                emptyLabel.setFont(Font.font("System", FontPosture.ITALIC, 12));
+                betList.getChildren().add(emptyLabel);
+            } else {
+                for (Bet bet : user.getBets()) {
+                    HBox betBox = new HBox(10);
+                    Label game = new Label(bet.toString());
+                    Label betAmt = new Label("Bet $" + bet.getBetAmt());
+                    Label winAmt = new Label("Win $ " + bet.getWinAmt());
+                    betBox.getChildren().addAll(game, betAmt, winAmt);
+                    betList.getChildren().add(betBox);
+                }
             }
 
             userInfo.getChildren().addAll(userName, money);
@@ -307,7 +392,7 @@ public class Client extends Application {
         labelView.setPadding(new Insets(20));
 
 
-        borderPane.setCenter(labelView);
+        borderPane.setCenter(tableView);
         borderPane.setBottom(betList);
         borderPane.setTop(userInfo);
         borderPane.setRight(botsBox);

@@ -32,6 +32,15 @@ public class User {
         this.money = money;
     }
 
+    public boolean checkBet(Game game) {
+        for (Bet bet : bets) {
+            if (bet.getGame() == game) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public String getName() {
         return name;
     }
