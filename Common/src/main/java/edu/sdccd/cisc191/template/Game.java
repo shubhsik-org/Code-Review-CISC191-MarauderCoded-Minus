@@ -104,14 +104,14 @@ public class Game {
 
         boolean result = team1Equals && team2Equals && startDateEquals && endDateEquals && team1OddEquals && team2OddEquals;
 
-        System.out.println("Comparing games: " + this + " and " + game);
+        /* System.out.println("Comparing games: " + this + " and " + game);
         System.out.println("team1Equals: " + team1Equals);
         System.out.println("team2Equals: " + team2Equals);
         System.out.println("startDateEquals: " + startDateEquals);
         System.out.println("endDateEquals: " + endDateEquals);
         System.out.println("team1OddEquals: " + team1OddEquals);
         System.out.println("team2OddEquals: " + team2OddEquals);
-        System.out.println("Result: " + result);
+        System.out.println("Result: " + result); */
 
         return result;
     }
