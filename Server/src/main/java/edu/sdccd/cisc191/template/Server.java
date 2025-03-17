@@ -10,9 +10,11 @@ import java.util.Date;
  * connection is opened, the program sends the current time to
  * the connected socket.  The program will continue to receive
  * and process connections until it is killed (by a CONTROL-C,
- * for example).  Note that this server processes each connection
- * as it is received, rather than creating a separate thread
- * to process the connection.
+ * for example).  Note that this server creates a separate thread
+ * to process the connection using <code>ClientHandler</code>
+ * @author: Andy Ly
+ * @version 1.0.0
+ * @see ClientHandler
  */
 public class Server {
     public static void main(String[] args) {
@@ -56,10 +58,4 @@ public class Server {
         }
     }
 }
-//        Server server = new Server();
-//        try {
-//            server.start(4444);
-//            server.stop();
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//        }
+
