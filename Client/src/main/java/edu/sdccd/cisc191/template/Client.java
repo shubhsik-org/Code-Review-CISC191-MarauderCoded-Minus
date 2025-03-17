@@ -198,7 +198,7 @@ public class Client extends Application {
         // BEGIN CLIENT VIEW CODE
         VBox labelView = new VBox(10);
         HBox userInfo = new HBox(10);
-        VBox betList = new VBox(10);
+        HBox betList = new HBox(10);
         betList.setPrefHeight(200);
 
         VBox botsBox = new VBox(10);
@@ -362,7 +362,7 @@ public class Client extends Application {
 
         try {
 
-            userInfo.setBackground(Background.fill(Color.rgb(45, 51, 107)));
+            userInfo.setBackground(Background.fill(Color.rgb(126, 24, 145)));
             Label userName = new Label(user.getName());
             userName.setFont(new Font(20));
             userName.setTextFill(Color.WHITE);
@@ -381,17 +381,41 @@ public class Client extends Application {
             }
 
 
+
             if (user.getBets().isEmpty()) {
                 Label emptyLabel = new Label("Your bets will appear here");
                 emptyLabel.setFont(Font.font("System", FontPosture.ITALIC, 12));
                 betList.getChildren().add(emptyLabel);
             } else {
                 for (Bet bet : user.getBets()) {
-                    HBox betBox = new HBox(10);
-                    Label game = new Label(bet.toString());
+                    VBox betBox = new VBox(10);
+                    betBox.setPrefHeight(200);
+                    betBox.setPrefWidth(200);
+                    betBox.setStyle("-fx-background-color: #F26B0F");
+                    Label game = new Label(bet.getGame().getTeam1() + " vs " + bet.getGame().getTeam2());
+                    Label date = new Label(bet.getGame().getStartDate().toString());
+                    game.setFont(new Font(15));
+                    game.setTextFill(Color.WHITE);
+                    date.setFont(new Font(15));
+                    date.setTextFill(Color.WHITE);
+                    HBox amts = new HBox(10);
                     Label betAmt = new Label("Bet $" + bet.getBetAmt());
-                    Label winAmt = new Label("Win $ " + bet.getWinAmt());
-                    betBox.getChildren().addAll(game, betAmt, winAmt);
+                    betAmt.setFont(new Font(10));
+                    betAmt.setTextFill(Color.WHITE);
+                    Label winAmt = new Label("Win $" + bet.getWinAmt());
+                    winAmt.setFont(new Font(10));
+                    winAmt.setTextFill(Color.WHITE);
+                    Button betInfo = new Button("See More");
+                    betInfo.setOnAction(event -> {
+                        try {
+                            new BetInfoView().betInfoView(stage, bet);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+
+                    amts.getChildren().addAll(betAmt, winAmt);
+                    betBox.getChildren().addAll(game, date, betAmt, winAmt, betInfo);
                     betList.getChildren().add(betBox);
                 }
             }
@@ -409,7 +433,7 @@ public class Client extends Application {
         borderPane.setTop(userInfo);
         borderPane.setRight(botsBox);
 
-        Scene scene = new Scene(borderPane, 1200, 600);
+        Scene scene = new Scene(borderPane, 1600, 600);
         stage.setScene(scene);
         stage.setTitle("Marauder Bets");
         stage.show();

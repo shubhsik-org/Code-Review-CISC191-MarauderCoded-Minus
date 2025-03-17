@@ -37,7 +37,7 @@ public class BetView extends Application {
             }
         });
 
-        stage.setScene(new Scene(betView));
+        stage.setScene(new Scene(betView, 300, 300));
         stage.show();
 
 

@@ -7,7 +7,8 @@ public class Bet {
     private Game game;
     private int betAmt;
     private int winAmt;
-    public double winOdds;
+    private int winOdds;
+    private int[] winOddsOvertime;
 
     //BEGIN MAKING CLASS SERIALIZABLE
     @JsonIgnore
@@ -30,7 +31,11 @@ public class Bet {
         this.game = g;
         this.betAmt = amt;
         this.winAmt = (int) (amt * 1.5);
-
+        this.winOdds = (int) Math.round(1 + Math.random() * 99);
+        this.winOddsOvertime = new int[20];
+        for (int i = 0; i < 20; i++) {
+            this.winOddsOvertime[i] = (int) Math.round(1 + Math.random() * 99);
+        }
     /*
         this.winOdds = odds;
        if (winOdds >= 0) {
@@ -57,6 +62,15 @@ public class Bet {
     public void setGame(Game game) {
         this.game = game;
     }
+
+    public double getWinOdds() {
+        return winOdds;
+    }
+
+    public int[] getWinOddsOvertime() {
+        return winOddsOvertime;
+    }
+
 
     public int getBetAmt() {
         return betAmt;
