@@ -11,19 +11,25 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
-// Thread to handle clients
+/**
+    * ClientHandler is a thread created by the <code>Server</code>
+    * to handle requests. It contains helper functions to handle
+    * specific types of requests.
+**/
 class ClientHandler implements Runnable {
 
-    private ServerSocket serverSocket;
-    private Socket clientSocket;
-    private PrintWriter out;
-    private BufferedReader in;
+    private ServerSocket serverSocket; // Server Socket
+    private Socket clientSocket; // Client Socket
+    private PrintWriter out; // Output stream to write responses too
+    private BufferedReader in; // Input stream to read requests
 
     public ClientHandler(Socket socket) {
         this.clientSocket = socket;
     }
     
-    // Discerns the type of clientRequest and then passes it on to the corresponding handler function
+    /**
+        * Runs a Thread
+    **/
     public void run() {
         
         System.out.println("Passed duties on to ClientHandler...");
