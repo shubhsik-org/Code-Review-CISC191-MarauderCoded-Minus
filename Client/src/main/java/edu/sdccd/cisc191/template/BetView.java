@@ -1,13 +1,18 @@
 package edu.sdccd.cisc191.template;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
 
 public class BetView extends Application {
     Game game;
@@ -30,18 +35,30 @@ public class BetView extends Application {
         betView.getChildren().addAll(bet, b, b1);
 
         b1.setOnAction(evt -> {
-            Bet placedBet = new Bet(game, Integer.parseInt(b.getText()), team);
-            Client.user.addBet(placedBet);
-            try {
-                new Client().start(stage);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            Integer amount = Integer.parseInt(b.getText());
+            if (Client.user.getMoneyBet() >= amount) {
+                Bet placedBet = new Bet(game, amount, team);
+                Client.user.addBet(placedBet);
+                try {
+                    new Client().start(stage);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                //Creating a dialog
+                Dialog<String> dialog = new Dialog<String>();
+                //Setting the title
+                dialog.setTitle("Marauder Bets");
+                ButtonType type = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+                //Setting the content of the dialog
+                dialog.setContentText("This is more money that you have available to bet! $" + Client.user.getMoneyBet());
+                //Adding buttons to the dialog pane
+                dialog.getDialogPane().getButtonTypes().add(type);
+                dialog.showAndWait();
             }
         });
-
         stage.setScene(new Scene(betView, 200, 300));
         stage.show();
-
 
 
     }

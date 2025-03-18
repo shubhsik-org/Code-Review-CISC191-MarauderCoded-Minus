@@ -220,23 +220,14 @@ public class Client extends Application {
         team2.setReorderable(false);
 
 
-        TableColumn<String, String> startDate = new TableColumn<>("Start Date");
+        TableColumn<String, String> startDate = new TableColumn<>("Date");
         startDate.setPrefWidth(500);
-        startDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+        startDate.setCellValueFactory(new PropertyValueFactory<>("dateClean"));
         tableView.getColumns().add(startDate);
         startDate.setResizable(false);
         startDate.setReorderable(false);
         startDate.setSortable(false);
-        startDate.setPrefWidth(250);
-
-        TableColumn<String, String> endDate = new TableColumn<>("End Date");
-        endDate.setPrefWidth(500);
-        endDate.setCellValueFactory(new PropertyValueFactory<>("endDate"));
-        tableView.getColumns().add(endDate);
-        endDate.setResizable(false);
-        endDate.setReorderable(false);
-        endDate.setSortable(false);
-        endDate.setPrefWidth(250);
+        startDate.setPrefWidth(150);
 
         TableColumn<String, String> team1Odd = new TableColumn<>("Team 1 Odds");
         team1Odd.setCellValueFactory(new PropertyValueFactory<>("team1Odd"));
@@ -264,6 +255,7 @@ public class Client extends Application {
                             throw new RuntimeException(e);
                         }
                     }
+                    betButton.getStyleClass().add("primary-button");
                 });
             }
 
@@ -319,7 +311,10 @@ public class Client extends Application {
                         }
                     }
                 });
+                betButton.getStyleClass().add("primary-button");
             }
+
+
 
             @Override
             protected void updateItem(Void item, boolean empty) {
@@ -344,7 +339,7 @@ public class Client extends Application {
         bet2Column.setReorderable(false);
         bet2Column.setSortable(false);
 
-
+        tableView.getStyleClass().add("custom-table");
 
         for (Game game : response) {
             tableView.getItems().add(game);
@@ -361,6 +356,15 @@ public class Client extends Application {
             money.setFont(new Font(20));
             money.setTextFill(Color.WHITE);
 
+            Label moneyLine = new Label("$" + user.getMoneyLine());
+            moneyLine.setFont(new Font(20));
+            moneyLine.setTextFill(Color.LIGHTGRAY);
+
+            Label moneyBet = new Label("$" + user.getMoneyBet());
+            moneyBet.setFont(new Font(20));
+            moneyBet.setTextFill(Color.LIGHTGRAY);
+
+            userInfo.getChildren().addAll(userName, money, moneyLine, moneyBet);
 
 
 
@@ -375,11 +379,14 @@ public class Client extends Application {
                     betBox.setPrefWidth(200);
                     betBox.setStyle("-fx-background-color: #F26B0F");
                     Label game = new Label(bet.getGame().getTeam1() + " vs " + bet.getGame().getTeam2());
-                    Label date = new Label(bet.getGame().getStartDate().toString());
+                    Label date = new Label(bet.getGame().getDateClean());
+                    Label team = new Label(bet.getBetTeam());
                     game.setFont(new Font(15));
                     game.setTextFill(Color.WHITE);
                     date.setFont(new Font(15));
                     date.setTextFill(Color.WHITE);
+                    team.setFont(new Font(15));
+                    team.setTextFill(Color.WHITE);
                     HBox amts = new HBox(10);
                     Label betAmt = new Label("Bet $" + bet.getBetAmt());
                     betAmt.setFont(new Font(10));
@@ -397,12 +404,11 @@ public class Client extends Application {
                     });
 
                     amts.getChildren().addAll(betAmt, winAmt);
-                    betBox.getChildren().addAll(game, date, betAmt, winAmt, betInfo);
+                    betBox.getChildren().addAll(game, date,team, betAmt, winAmt, betInfo);
                     betList.getChildren().add(betBox);
                 }
             }
 
-            userInfo.getChildren().addAll(userName, money);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -415,6 +421,7 @@ public class Client extends Application {
         borderPane.setTop(userInfo);
 
         Scene scene = new Scene(borderPane, 1200, 600);
+        scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
         stage.setScene(scene);
         stage.setTitle("Marauder Bets");
         stage.show();

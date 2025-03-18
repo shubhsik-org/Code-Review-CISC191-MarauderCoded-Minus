@@ -95,6 +95,9 @@ public class Bet {
         wasFulfilled = randomNumber <= winOdds;
     }
 
+    public String getBetTeam() {
+        return team;
+    }
 
     public int getBetAmt() {
         return betAmt;

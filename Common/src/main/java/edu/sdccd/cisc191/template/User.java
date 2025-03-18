@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class User {
     private String name;
     private int money;
+    private int moneyLine; // Money that the user has put on the line for bets but has not been fulfilled yet
+    private int moneyBet; // Money that the user has to make future bets. Money that hasn't been used to bet on anything
     // TODO: Check by using this list instead of looping through all bets on the table.
     // We are doing wayy too many checks right now.
     private ArrayList<Bet> bets = new ArrayList<>();
@@ -32,6 +34,8 @@ public class User {
     public User(String name, int money) {
         this.name = name;
         this.money = money;
+        this.moneyLine = 0;
+        this.moneyBet = money;
     }
 
     public boolean checkBet(Game game) {
@@ -43,6 +47,22 @@ public class User {
             }
         }
         return false;
+    }
+
+    public int getMoneyLine() {
+        return moneyLine;
+    }
+
+    public void setMoneyLine(int moneyLine) {
+        this.moneyLine = moneyLine;
+    }
+
+    public int getMoneyBet() {
+        return moneyBet;
+    }
+
+    public void setMoneyBet(int moneyBet) {
+        this.moneyBet = moneyBet;
     }
 
     public String getName() {
@@ -59,6 +79,8 @@ public class User {
 
     public void addBet(Bet b) {
         bets.add(b);
+        moneyBet -= b.getBetAmt();
+        moneyLine += b.getBetAmt();
     }
 
     public void removeBet(Bet b) {

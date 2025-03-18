@@ -12,6 +12,7 @@ public class Game {
     private String team2;
     private Date startDate;
     private Date endDate;
+    private String dateClean;
     private double team1Odd;
     private double team2Odd;
 
@@ -38,7 +39,11 @@ public class Game {
 
         this.team1Odd = Math.round(Math.random() * 100);
         this.team2Odd = Math.round(Math.random() * 100);
+
+        this.dateClean = this.getDateClean();
     }
+
+
     // Constructor to use if we are loading game from API
     public Game(String t1, String t2, Date startDate, Date endDate, double team1Odd, double team2Odd) {
         this.team1 = t1;
@@ -48,6 +53,8 @@ public class Game {
 
         this.team1Odd = team1Odd;
         this.team2Odd = team2Odd;
+        this.dateClean = this.getDateClean();
+
     }
 
     //Calculating odds with American betting odds using pool of money
@@ -138,6 +145,8 @@ public class Game {
     public Date getEndDate() {
         return endDate;
     }
+
+    public String getDateClean() { return startDate.getMonth() + "/" + startDate.getDate() + "/" + startDate.getYear() + " - " + endDate.getMonth() + "/" + endDate.getDate() + "/" + endDate.getYear(); }
 
     public void setTeam1(String team1) {
         this.team1 = team1;
