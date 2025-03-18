@@ -201,10 +201,6 @@ public class Client extends Application {
         HBox betList = new HBox(10);
         betList.setPrefHeight(200);
 
-        VBox botsBox = new VBox(10);
-
-        botsBox.setPrefWidth(300);
-        botsBox.setPadding(new Insets(1));
 
         TableView tableView = new TableView();
 
@@ -262,15 +258,8 @@ public class Client extends Application {
                     int index = getIndex();
                     if (index >= 0 && index < getTableView().getItems().size()) {
                         Game game = getTableView().getItems().get(index);
-                        if (user.checkBet(game)) {
-                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                            alert.setTitle("Cannot bet");
-                            alert.setHeaderText("Cannot bet on this game");
-                            alert.setContentText("You've already bet on this game.");
-                            alert.showAndWait();
-                        }
                         try {
-                            new BetView().betView(stage, game);
+                            new BetView().betView(stage, game, game.getTeam1());
                         } catch (Exception e) {
                             throw new RuntimeException(e);
                         }
@@ -324,7 +313,7 @@ public class Client extends Application {
                     if (index >= 0 && index < getTableView().getItems().size()) {
                         Game game = getTableView().getItems().get(index);
                         try {
-                            new BetView().betView(stage, game);
+                            new BetView().betView(stage, game, game.getTeam2());
                         } catch (Exception e) {
                             throw new RuntimeException(e);
                         }
@@ -350,6 +339,7 @@ public class Client extends Application {
             }
         });
         tableView.getColumns().add(bet2Column);
+
         bet2Column.setResizable(false);
         bet2Column.setReorderable(false);
         bet2Column.setSortable(false);
@@ -371,14 +361,6 @@ public class Client extends Application {
             money.setFont(new Font(20));
             money.setTextFill(Color.WHITE);
 
-
-            for (User user : users) {
-                HBox botBox = new HBox(10);
-                Label userName1 = new Label(user.getName());
-                Label money1 = new Label("$" + user.getMoney());
-                botBox.getChildren().addAll(userName1, money1);
-                botsBox.getChildren().add(botBox);
-            }
 
 
 
@@ -431,9 +413,8 @@ public class Client extends Application {
         borderPane.setCenter(tableView);
         borderPane.setBottom(betList);
         borderPane.setTop(userInfo);
-        borderPane.setRight(botsBox);
 
-        Scene scene = new Scene(borderPane, 1600, 600);
+        Scene scene = new Scene(borderPane, 1200, 600);
         stage.setScene(scene);
         stage.setTitle("Marauder Bets");
         stage.show();

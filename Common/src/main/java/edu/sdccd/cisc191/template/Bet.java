@@ -3,12 +3,16 @@ package edu.sdccd.cisc191.template;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.Random;
+
 public class Bet {
     private Game game;
+    private String team;
     private int betAmt;
     private int winAmt;
     private int winOdds;
     private int[] winOddsOvertime;
+    private boolean wasFulfilled;
 
     //BEGIN MAKING CLASS SERIALIZABLE
     @JsonIgnore
@@ -27,8 +31,9 @@ public class Bet {
     //END MAKING CLASS SERIALIZABLE
 
     //Betting entry and return calculations
-    public Bet(Game g, int amt) {
+    public Bet(Game g, int amt, String team) {
         this.game = g;
+        this.team = team;
         this.betAmt = amt;
         this.winAmt = (int) (amt * 1.5);
         this.winOdds = (int) Math.round(1 + Math.random() * 99);
@@ -69,6 +74,25 @@ public class Bet {
 
     public int[] getWinOddsOvertime() {
         return winOddsOvertime;
+    }
+
+    public User updateUser(User user) {
+        if (wasFulfilled) {
+            user.setMoney(user.getMoney() + winAmt);
+        } else if (!wasFulfilled) {
+            user.setMoney(user.getMoney() - winAmt);
+        } else {
+            System.out.println("Bet was not evaluated yet!");
+        }
+
+        return user;
+    }
+
+    public void updateFulfillment() {
+        Random random = new Random();
+        int randomNumber = random.nextInt(100) + 1; // Generates a number from 1 to 100
+
+        wasFulfilled = randomNumber <= winOdds;
     }
 
 
