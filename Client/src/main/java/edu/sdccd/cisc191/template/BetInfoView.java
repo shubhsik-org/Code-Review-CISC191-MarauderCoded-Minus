@@ -8,19 +8,21 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class BetInfoView extends Application {
     Bet bet;
 
+    // Launch the BetInfoView for a given Bet object.
     public void betInfoView(Stage primaryStage, Bet bet) throws Exception {
         this.bet = bet;
         start(primaryStage);
-
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-        VBox root = new VBox();
+        VBox root = new VBox(10);
         root.setStyle("-fx-alignment: center");
 
         Label betInfo = new Label(bet.toString());
@@ -31,25 +33,33 @@ public class BetInfoView extends Application {
         money.getChildren().addAll(betAmt, winAmt);
         money.setStyle("-fx-alignment: center");
 
-        // Set up the X and Y axes
+        // Set up the axes for the line chart.
         CategoryAxis xAxis = new CategoryAxis();
-        xAxis.setLabel("Index");
+        xAxis.setLabel("Time");
         NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabel("Random Value");
+        yAxis.setLabel("Odds");
 
-        // Create the BarChart with the axes
+        // Create the LineChart.
         LineChart<String, Number> lineChart = new LineChart<>(xAxis, yAxis);
-        lineChart.setTitle("Random Numbers Chart");
+        lineChart.setTitle("Win Odds Over Time");
 
-        // Create a data series and add data points for each array element
-        LineChart.Series<String, Number> series = new LineChart.Series<>();
-        series.setName("Random Data");
-        for (int i = 0; i < bet.getWinOddsOvertime().length; i++) {
-            // Use index (starting from 1) as the category label
-            series.getData().add(new XYChart.Data<>(String.valueOf(i + 1), bet.getWinOddsOvertime()[i]));
+        // Create a data series.
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Win Odds");
+
+        // Assume bet.getWinOddsOvertime() returns a double[][] where each element is [odd, timestamp]
+        double[][] oddsData = bet.getWinOddsOvertime();
+        // Iterate over each pair in the data array.
+        for (int i = 0; i < oddsData.length; i++) {
+            double odd = oddsData[i][0];
+            // The timestamp is stored as seconds since epoch.
+            long timestamp = (long) oddsData[i][1];
+            // Format the timestamp (multiply by 1000 to convert to milliseconds).
+            String timeLabel = new SimpleDateFormat("HH:mm").format(new Date(timestamp * 1000));
+            series.getData().add(new XYChart.Data<>(timeLabel, odd));
         }
 
-        // Add the data series to the chart
+        // Add the series to the chart.
         lineChart.getData().add(series);
 
         Button backButton = new Button("Back");
@@ -60,19 +70,15 @@ public class BetInfoView extends Application {
                 throw new RuntimeException(ex);
             }
         });
+        backButton.getStyleClass().add("primary-button");
 
-        root.getChildren().add(betInfo);
-        root.getChildren().add(money);
-        root.getChildren().add(lineChart);
-        root.getChildren().add(backButton);
+        root.getChildren().addAll(betInfo, money, lineChart, backButton);
 
         Scene scene = new Scene(root, 800, 600);
+        scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
 
         stage.setTitle("Bet Info");
         stage.setScene(scene);
         stage.show();
-
-
-
     }
 }
