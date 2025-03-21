@@ -322,18 +322,16 @@ public class Client extends Application {
                 VBox betBox = new VBox(10);
                 betBox.setPrefHeight(200);
                 betBox.setPrefWidth(200);
-                betBox.setStyle("-fx-background-color: #F26B0F");
+                betBox.getStyleClass().add("bet-box");
 
                 Label gameLabel = new Label(bet.getGame().getTeam1() + " vs " + bet.getGame().getTeam2());
                 Label dateLabel = new Label(bet.getGame().getDateClean());
                 Label teamLabel = new Label(bet.getBetTeam());
 
-                gameLabel.setFont(new Font(15));
-                gameLabel.setTextFill(Color.WHITE);
-                dateLabel.setFont(new Font(15));
-                dateLabel.setTextFill(Color.WHITE);
-                teamLabel.setFont(new Font(15));
-                teamLabel.setTextFill(Color.WHITE);
+                // Apply a common style class to all bet-related labels
+                gameLabel.getStyleClass().add("bet-box-label");
+                dateLabel.getStyleClass().add("bet-box-label");
+                teamLabel.getStyleClass().add("bet-box-label");
 
                 Label betAmt = new Label("Bet $" + bet.getBetAmt());
                 betAmt.setFont(new Font(10));
@@ -343,6 +341,7 @@ public class Client extends Application {
                 winAmt.setTextFill(Color.WHITE);
 
                 Button betInfo = new Button("See More");
+                betInfo.getStyleClass().add("bet-info-button");
                 betInfo.setOnAction(event -> {
                     try {
                         new BetInfoView().betInfoView(stage, bet);

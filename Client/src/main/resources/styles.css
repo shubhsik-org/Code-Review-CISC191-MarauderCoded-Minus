@@ -74,3 +74,25 @@
     -fx-cursor: default;
     -fx-effect: none;
 }
+
+
+/* styles.css */
+.bet-box {
+    -fx-background-color: #F26B0F;
+    -fx-background-radius: 10;
+    -fx-padding: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0, 0);
+}
+.bet-box-label {
+    -fx-font-size: 15;
+    -fx-text-fill: white;
+}
+.bet-info-button {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #F26B0F;
+    -fx-border-radius: 5;
+    -fx-cursor: hand;
+}
+.bet-info-button:hover {
+    -fx-background-color: #e0e0e0;
+}
