@@ -43,6 +43,7 @@ public class Client extends Application {
     private PrintWriter out;
     private BufferedReader in;
 
+    // --- Socket and Request Methods ---
     public void startConnection(String ip, int port) throws IOException {
         clientSocket = new Socket(ip, port);
         out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -89,6 +90,8 @@ public class Client extends Application {
         out.close();
         clientSocket.close();
     }
+
+    // -- Request Wrappers ---
 
     // Gets game with specified ID from database
     public Game gameGetRequest(int id) throws IOException {
@@ -152,100 +155,50 @@ public class Client extends Application {
         return null;
     }
 
+    // --- UI Component Builders ---
+    // Build the table view for the games
+    private TableView<Game> createGameTableView(Game[] games, Stage stage) {
+        TableView<Game> tableView = new TableView<>();
 
-    public static void main(String[] args) {
-        launch();// Run this Application.
-    }
+        // Column for Team 1
+        TableColumn<Game, String> team1Col = new TableColumn<>("Team 1");
+        team1Col.setCellValueFactory(new PropertyValueFactory<>("team1"));
+        tableView.getColumns().add(team1Col);
+        team1Col.setResizable(false);
+        team1Col.setSortable(false);
+        team1Col.setReorderable(false);
 
+        // Column for Team 2
+        TableColumn<Game, String> team2Col = new TableColumn<>("Team 2");
+        team2Col.setCellValueFactory(new PropertyValueFactory<>("team2"));
+        tableView.getColumns().add(team2Col);
+        team2Col.setResizable(false);
+        team2Col.setSortable(false);
+        team2Col.setReorderable(false);
 
-    @Override
-    public void start(Stage stage) throws Exception {
+        // Column for Date
+        TableColumn<Game, String> dateCol = new TableColumn<>("Date");
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("dateClean"));
+        dateCol.setPrefWidth(150);
+        tableView.getColumns().add(dateCol);
+        dateCol.setResizable(false);
+        dateCol.setSortable(false);
+        dateCol.setReorderable(false);
 
-        BorderPane borderPane = new BorderPane();
+        // Column for Team 1 Odds
+        TableColumn<Game, String> team1OddCol = new TableColumn<>("Team 1 Odds");
+        team1OddCol.setCellValueFactory(new PropertyValueFactory<>("team1Odd"));
+        tableView.getColumns().add(team1OddCol);
+        team1OddCol.setResizable(false);
+        team1OddCol.setSortable(false);
+        team1OddCol.setReorderable(false);
 
-        // TODO: update this so it can just pull all of the games at once, because what if there are more than 5 upcoming games? either that or have a server method that's the number of upcoming games, then update the assignment of this array to be a for loop that counts up and calls gameGetRequest
-        Game[] response = new Game[]{
-                gameGetRequest(0),
-                gameGetRequest(1),
-                gameGetRequest(2),
-                gameGetRequest(3),
-                gameGetRequest(4),
-        };
-
-        // TODO: see comment with Game[] response
-        User[] users = new User[]{
-                userGetRequest(0),
-                userGetRequest(1),
-                userGetRequest(2),
-                userGetRequest(3),
-                userGetRequest(4),
-        };
-/* BEGIN EXAMPLES OF HOW TO USE THE SERVER
-        // Test modification of user
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("Name", "John");
-        attributes.put("Money", 9999);
-        // Serialize Bet object into JSON string before sending to server
-        attributes.put("addBet", Bet.toJSON(new Bet(response[0], 100)));
-        System.out.println(userModifyRequest(2, attributes));
-
-        System.out.println(getSizeRequest(2));
-
-        System.out.println(getSizeRequest(1));
-        END EXAMPLES OF HOW TO USE THE SERVER
- */
-
-        // BEGIN CLIENT VIEW CODE
-        VBox labelView = new VBox(10);
-        HBox userInfo = new HBox(10);
-        HBox betList = new HBox(10);
-        betList.setPrefHeight(200);
-
-
-        TableView tableView = new TableView();
-
-        // Describes a table with the games displayed
-        TableColumn<Game, String> team1 = new TableColumn<>("Team 1");
-        team1.setCellValueFactory(new PropertyValueFactory<>("team1"));
-        tableView.getColumns().add(team1);
-        team1.setResizable(false);
-        team1.setSortable(false);
-        team1.setReorderable(false);
-
-        TableColumn<Game, String> team2 = new TableColumn<>("Team 2");
-        team2.setCellValueFactory(new PropertyValueFactory<>("team2"));
-        tableView.getColumns().add(team2);
-        team2.setResizable(false);
-        team2.setSortable(false);
-        team2.setReorderable(false);
-
-
-        TableColumn<String, String> startDate = new TableColumn<>("Date");
-        startDate.setPrefWidth(500);
-        startDate.setCellValueFactory(new PropertyValueFactory<>("dateClean"));
-        tableView.getColumns().add(startDate);
-        startDate.setResizable(false);
-        startDate.setReorderable(false);
-        startDate.setSortable(false);
-        startDate.setPrefWidth(150);
-
-        TableColumn<String, String> team1Odd = new TableColumn<>("Team 1 Odds");
-        team1Odd.setCellValueFactory(new PropertyValueFactory<>("team1Odd"));
-        tableView.getColumns().add(team1Odd);
-        team1Odd.setResizable(false);
-        team1Odd.setSortable(false);
-        team1Odd.setReorderable(false);
-
-
-
+        // Button column for betting on Team 1
         TableColumn<Game, Void> bet1Column = new TableColumn<>("Bet");
         bet1Column.setCellFactory(column -> new TableCell<Game, Void>() {
             private final Button betButton = new Button("Bet");
-
             {
-                // Set up the button action here, but don't retrieve the game yet.
                 betButton.setOnAction(event -> {
-                    // Retrieve the Game object at the time of the button click.
                     int index = getIndex();
                     if (index >= 0 && index < getTableView().getItems().size()) {
                         Game game = getTableView().getItems().get(index);
@@ -258,18 +211,15 @@ public class Client extends Application {
                     betButton.getStyleClass().add("primary-button");
                 });
             }
-
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    // Now that the cell is associated with the table, get the Game object safely.
                     int index = getIndex();
                     if (index >= 0 && index < getTableView().getItems().size()) {
                         Game game = getTableView().getItems().get(index);
-                        // Update button state (for example, disable if user already bet)
                         betButton.setDisable(user.checkBet(game));
                     }
                     setGraphic(betButton);
@@ -278,29 +228,23 @@ public class Client extends Application {
         });
         tableView.getColumns().add(bet1Column);
         bet1Column.setResizable(false);
-        bet1Column.setReorderable(false);
         bet1Column.setSortable(false);
+        bet1Column.setReorderable(false);
 
+        // Column for Team 2 Odds
+        TableColumn<Game, String> team2OddCol = new TableColumn<>("Team 2 Odds");
+        team2OddCol.setCellValueFactory(new PropertyValueFactory<>("team2Odd"));
+        tableView.getColumns().add(team2OddCol);
+        team2OddCol.setResizable(false);
+        team2OddCol.setSortable(false);
+        team2OddCol.setReorderable(false);
 
-
-
-
-        TableColumn<Game, String> team2Odd = new TableColumn<>("Team 2 Odds");
-        team2Odd.setCellValueFactory(new PropertyValueFactory<>("team2Odd"));
-        tableView.getColumns().add(team2Odd);
-        team2Odd.setResizable(false);
-        team2Odd.setSortable(false);
-        team2Odd.setReorderable(false);
-
-
+        // Button column for betting on Team 2
         TableColumn<Game, Void> bet2Column = new TableColumn<>("Bet");
         bet2Column.setCellFactory(column -> new TableCell<Game, Void>() {
             private final Button betButton = new Button("Bet");
-
             {
-                // Set up the button action here, but don't retrieve the game yet.
                 betButton.setOnAction(event -> {
-                    // Retrieve the Game object at the time of the button click.
                     int index = getIndex();
                     if (index >= 0 && index < getTableView().getItems().size()) {
                         Game game = getTableView().getItems().get(index);
@@ -313,20 +257,15 @@ public class Client extends Application {
                 });
                 betButton.getStyleClass().add("primary-button");
             }
-
-
-
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    // Now that the cell is associated with the table, get the Game object safely.
                     int index = getIndex();
                     if (index >= 0 && index < getTableView().getItems().size()) {
                         Game game = getTableView().getItems().get(index);
-                        // Update button state (for example, disable if user already bet)
                         betButton.setDisable(user.checkBet(game));
                     }
                     setGraphic(betButton);
@@ -334,99 +273,134 @@ public class Client extends Application {
             }
         });
         tableView.getColumns().add(bet2Column);
-
         bet2Column.setResizable(false);
-        bet2Column.setReorderable(false);
         bet2Column.setSortable(false);
+        bet2Column.setReorderable(false);
 
         tableView.getStyleClass().add("custom-table");
 
-        for (Game game : response) {
-            tableView.getItems().add(game);
-        }
+        // Add game items to the table view
+        tableView.getItems().addAll(games);
 
-        try {
+        return tableView;
+    }
 
-            userInfo.setBackground(Background.fill(Color.rgb(126, 24, 145)));
-            Label userName = new Label(user.getName());
-            userName.setFont(new Font(20));
-            userName.setTextFill(Color.WHITE);
+    private HBox createUserInfoBox() {
+        HBox userInfo = new HBox(10);
+        userInfo.setBackground(Background.fill(Color.rgb(126, 24, 145)));
 
-            Label money = new Label("$" + user.getMoney());
-            money.setFont(new Font(20));
-            money.setTextFill(Color.WHITE);
+        Label userName = new Label(user.getName());
+        userName.setFont(new Font(20));
+        userName.setTextFill(Color.WHITE);
 
-            Label moneyLine = new Label("$" + user.getMoneyLine());
-            moneyLine.setFont(new Font(20));
-            moneyLine.setTextFill(Color.LIGHTGRAY);
+        Label money = new Label("$" + user.getMoney());
+        money.setFont(new Font(20));
+        money.setTextFill(Color.WHITE);
 
-            Label moneyBet = new Label("$" + user.getMoneyBet());
-            moneyBet.setFont(new Font(20));
-            moneyBet.setTextFill(Color.LIGHTGRAY);
+        Label moneyLine = new Label("$" + user.getMoneyLine());
+        moneyLine.setFont(new Font(20));
+        moneyLine.setTextFill(Color.LIGHTGRAY);
 
-            userInfo.getChildren().addAll(userName, money, moneyLine, moneyBet);
+        Label moneyBet = new Label("$" + user.getMoneyBet());
+        moneyBet.setFont(new Font(20));
+        moneyBet.setTextFill(Color.LIGHTGRAY);
 
+        userInfo.getChildren().addAll(userName, money, moneyLine, moneyBet);
+        return userInfo;
+    }
 
+    private HBox createBetListBox(Stage stage) {
+        HBox betList = new HBox(10);
+        betList.setPrefHeight(200);
 
-            if (user.getBets().isEmpty()) {
-                Label emptyLabel = new Label("Your bets will appear here");
-                emptyLabel.setFont(Font.font("System", FontPosture.ITALIC, 12));
-                betList.getChildren().add(emptyLabel);
-            } else {
-                for (Bet bet : user.getBets()) {
-                    VBox betBox = new VBox(10);
-                    betBox.setPrefHeight(200);
-                    betBox.setPrefWidth(200);
-                    betBox.setStyle("-fx-background-color: #F26B0F");
-                    Label game = new Label(bet.getGame().getTeam1() + " vs " + bet.getGame().getTeam2());
-                    Label date = new Label(bet.getGame().getDateClean());
-                    Label team = new Label(bet.getBetTeam());
-                    game.setFont(new Font(15));
-                    game.setTextFill(Color.WHITE);
-                    date.setFont(new Font(15));
-                    date.setTextFill(Color.WHITE);
-                    team.setFont(new Font(15));
-                    team.setTextFill(Color.WHITE);
-                    HBox amts = new HBox(10);
-                    Label betAmt = new Label("Bet $" + bet.getBetAmt());
-                    betAmt.setFont(new Font(10));
-                    betAmt.setTextFill(Color.WHITE);
-                    Label winAmt = new Label("Win $" + bet.getWinAmt());
-                    winAmt.setFont(new Font(10));
-                    winAmt.setTextFill(Color.WHITE);
-                    Button betInfo = new Button("See More");
-                    betInfo.setOnAction(event -> {
-                        try {
-                            new BetInfoView().betInfoView(stage, bet);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+        if (user.getBets().isEmpty()) {
+            Label emptyLabel = new Label("Your bets will appear here");
+            emptyLabel.setFont(Font.font("System", FontPosture.ITALIC, 12));
+            betList.getChildren().add(emptyLabel);
+        } else {
+            for (Bet bet : user.getBets()) {
+                VBox betBox = new VBox(10);
+                betBox.setPrefHeight(200);
+                betBox.setPrefWidth(200);
+                betBox.setStyle("-fx-background-color: #F26B0F");
 
-                    amts.getChildren().addAll(betAmt, winAmt);
-                    betBox.getChildren().addAll(game, date,team, betAmt, winAmt, betInfo);
-                    betList.getChildren().add(betBox);
-                }
+                Label gameLabel = new Label(bet.getGame().getTeam1() + " vs " + bet.getGame().getTeam2());
+                Label dateLabel = new Label(bet.getGame().getDateClean());
+                Label teamLabel = new Label(bet.getBetTeam());
+
+                gameLabel.setFont(new Font(15));
+                gameLabel.setTextFill(Color.WHITE);
+                dateLabel.setFont(new Font(15));
+                dateLabel.setTextFill(Color.WHITE);
+                teamLabel.setFont(new Font(15));
+                teamLabel.setTextFill(Color.WHITE);
+
+                Label betAmt = new Label("Bet $" + bet.getBetAmt());
+                betAmt.setFont(new Font(10));
+                betAmt.setTextFill(Color.WHITE);
+                Label winAmt = new Label("Win $" + bet.getWinAmt());
+                winAmt.setFont(new Font(10));
+                winAmt.setTextFill(Color.WHITE);
+
+                Button betInfo = new Button("See More");
+                betInfo.setOnAction(event -> {
+                    try {
+                        new BetInfoView().betInfoView(stage, bet);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+                betBox.getChildren().addAll(gameLabel, dateLabel, teamLabel, betAmt, winAmt, betInfo);
+                betList.getChildren().add(betBox);
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        return betList;
+    }
 
-        labelView.setPadding(new Insets(20));
+    private Game[] getGames() throws IOException {
+        int size = getSizeRequest(1);
+        Game[] games = new Game[size];
+        for (int i = 0; i < size; i++) {
+            games[i] = this.gameGetRequest(i);
+        }
+        return games;
+    }
 
 
-        borderPane.setCenter(tableView);
-        borderPane.setBottom(betList);
-        borderPane.setTop(userInfo);
 
-        Scene scene = new Scene(borderPane, 1200, 600);
+    public static void main(String[] args) {
+        launch();// Run this Application.
+    }
+
+
+    @Override
+    public void start(Stage stage) throws Exception {
+
+        // Build the main layout
+        BorderPane borderPane = new BorderPane();
+        borderPane.setPadding(new Insets(20));
+
+        // Retrieve game data (and user data if needed)
+        Game[] games = getGames();
+        // Note: The sample user array in the original code is replaced by the static "user" field.
+
+        // Create UI components
+        TableView<Game> gameTable = createGameTableView(games, stage);
+        HBox userInfoBox = createUserInfoBox();
+        HBox betListBox = createBetListBox(stage);
+
+        // Assemble components into the BorderPane
+        borderPane.setCenter(gameTable);
+        borderPane.setTop(userInfoBox);
+        borderPane.setBottom(betListBox);
+
+        // Create and set the scene
+        Scene scene = new Scene(borderPane, 800, 800);
         scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
         stage.setScene(scene);
         stage.setTitle("Marauder Bets");
         stage.show();
-
-
     }
 } //end class Client
 
