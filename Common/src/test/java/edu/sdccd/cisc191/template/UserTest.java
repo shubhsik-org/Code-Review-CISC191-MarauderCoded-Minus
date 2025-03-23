@@ -88,7 +88,7 @@ class UserTest {
     }
 
     /**
-     * Tests the <code>setMoneyLine</code> and <code>getMoneyLine</code> methods.
+     * Tests the getMoneyLine and getMoneyLine methods.
      */
     @Test
     void testSetAndGetMoneyLine() {
