@@ -11,15 +11,43 @@ import javafx.stage.Stage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * BetInfoView displays detailed information about a bet, including the bet amount, win amount,
+ * and the win odds over time. It uses a JavaFX application to render the UI components such as
+ * labels, charts, and buttons to allow users to view bet details and navigate back to the main view.
+ *
+ * <p>Usage:
+ * <pre>
+ *   BetInfoView view = new BetInfoView();
+ *   view.betInfoView(primaryStage, bet);
+ * </pre>
+ * </p>
+ */
 public class BetInfoView extends Application {
+    /**
+     * The bet object containing details to be displayed in the view.
+     */
     Bet bet;
 
-    // Launch the BetInfoView for a given Bet object.
+    /**
+     * Launches the BetInfoView for a given Bet object.
+     *
+     * @param primaryStage the primary stage for the JavaFX application.
+     * @param bet the Bet object containing bet details.
+     * @throws Exception if an error occurs during view initialization.
+     */
     public void betInfoView(Stage primaryStage, Bet bet) throws Exception {
         this.bet = bet;
         start(primaryStage);
     }
 
+    /**
+     * Starts the JavaFX application by constructing the scene graph to display bet information.
+     * It builds a layout with bet details, monetary values, and a line chart showing win odds over time.
+     *
+     * @param stage the primary stage for the JavaFX application.
+     * @throws Exception if an error occurs during UI construction.
+     */
     @Override
     public void start(Stage stage) throws Exception {
         VBox root = new VBox(10);
