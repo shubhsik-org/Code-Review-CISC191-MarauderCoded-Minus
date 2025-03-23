@@ -2,52 +2,55 @@ package edu.sdccd.cisc191.template;
 
 import java.net.*;
 import java.io.*;
-import java.util.Date;
 
 /**
- * This program is a server that takes connection requests on
- * the port specified by the constant LISTENING_PORT.  When a
- * connection is opened, the program sends the current time to
- * the connected socket.  The program will continue to receive
- * and process connections until it is killed (by a CONTROL-C,
- * for example).  Note that this server creates a separate thread
- * to process the connection using <code>ClientHandler</code>
- * @author: Andy Ly
+ * A multi-threaded server that listens for connection requests on a specified port
+ * and handles each client connection in a separate thread.
+ *
+ *  The server sends the current time to connected clients and continues running
+ * indefinitely until it is terminated manually. It uses the {@link ClientHandler}
+ * class to process individual client connections.
+ *
  * @version 1.0.0
+ * @author Andy Ly
  * @see ClientHandler
  */
 public class Server {
+
+    /**
+     * The entry point of the server application. Sets up the server to listen on
+     * port 4444, accepts client connections, and delegates processing to
+     * ClientHandler instances running in separate threads.
+     *
+     * @param args Command-line arguments (not used in this application).
+     */
     public static void main(String[] args) {
-        // In case we cannot later establish a server for some reason
-        // This declaration will allow us to exit gracefully.
         ServerSocket serverSocket = null;
 
         try {
-
-            // Server is listening on port 4444
+            // Initialize the server to listen on port 4444 with a backlog of 4096.
             serverSocket = new ServerSocket(4444, 4096);
             System.out.println("Server started on port 4444");
 
-            // Allows the multi-threading to happen
+            // Enable address reuse to allow multiple connections from the same host.
             serverSocket.setReuseAddress(true);
 
-            // Wait for clients forever
+            // Continuously wait for client connections.
             while (true) {
-
                 Socket client = serverSocket.accept();
 
-                // Displaying that new client is connected to the server
+                // Log the new client connection.
                 System.out.println("New client connected: " + client.getInetAddress().getHostAddress());
 
-                // Create the thread we pass on handling to
+                // Handle the client connection in a separate thread.
                 ClientHandler clientSocket = new ClientHandler(client);
-
-
                 new Thread(clientSocket).start();
             }
         } catch (IOException e) {
+            // Print any exceptions that occur during server operation.
             e.printStackTrace();
         } finally {
+            // Ensure the server socket is closed when the server terminates.
             if (serverSocket != null) {
                 try {
                     serverSocket.close();
@@ -58,4 +61,3 @@ public class Server {
         }
     }
 }
-

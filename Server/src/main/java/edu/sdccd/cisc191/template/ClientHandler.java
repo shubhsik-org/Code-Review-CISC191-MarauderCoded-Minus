@@ -12,75 +12,79 @@ import java.net.Socket;
 import java.util.*;
 
 /**
-    * ClientHandler is a thread created by the <code>Server</code>
-    * to handle requests. It contains helper functions to handle
-    * specific types of requests.
-**/
+ * Handles client requests in a separate thread. Each instance of  ClientHandler
+ * is responsible for processing the requests of a single client connected to the server.
+ *
+ *  It supports operations such as retrieving game or user details, updating user information,
+ * and managing bets. Communication is facilitated through JSON-encoded requests and responses.
+ *
+ * @author Andy Ly
+ * @see Server
+ * @see CustomerRequest
+ */
 class ClientHandler implements Runnable {
 
-    private ServerSocket serverSocket; // Server Socket
-    private Socket clientSocket; // Client Socket
-    private PrintWriter out; // Output stream to write responses too
-    private BufferedReader in; // Input stream to read requests
+    private ServerSocket serverSocket; // Server socket for incoming connections
+    private Socket clientSocket; // Socket for communicating with the client
+    private PrintWriter out; // Output stream to send responses to the client
+    private BufferedReader in; // Input stream to receive requests from the client
 
+    /**
+     * Creates a new  ClientHandler  for a given client socket.
+     *
+     * @param socket The client socket to be handled.
+     */
     public ClientHandler(Socket socket) {
         this.clientSocket = socket;
     }
-    
+
     /**
-        * Runs a Thread
-    **/
+     * Executes the thread to handle client communication.
+     * Processes incoming JSON-encoded requests, determines their type,
+     * and routes them to the appropriate handler methods.
+     */
+    @Override
     public void run() {
-        
         System.out.println("Passed duties on to ClientHandler...");
-        
+
         try {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
-                CustomerRequest request = CustomerRequest.fromJSON(inputLine);
-                System.out.println(request.toString());
+                CustomerRequest request = CustomerRequest.fromJSON(inputLine); // Deserialize the client request
+                System.out.println(request.toString()); // Log the request for debugging
 
-                //BEGIN REQUEST DISCERNMENT
-                // Handles getSize calls. Everything is string because we deal with JSON strings.
-                if(Objects.equals(request.getRequestType(), "GetSize")) {
+                // Handle request types
+                if (Objects.equals(request.getRequestType(), "GetSize")) {
                     String response = "-1";
-                    if(request.getId() == 1) {
+                    if (request.getId() == 1) {
                         response = GameDatabase.getInstance().getSize();
-                    } else if(request.getId() == 2) {
+                    } else if (request.getId() == 2) {
                         response = UserDatabase.getInstance().getSize();
                     }
                     out.println(response);
-                }
-                // Handles gameGetRequest calls
-                if(Objects.equals(request.getRequestType(), "Game")) {
+                } else if (Objects.equals(request.getRequestType(), "Game")) {
                     Game response = null;
                     if (request.getId() >= 0) {
                         response = getGame(request);
                     }
                     out.println(Game.toJSON(response));
-                } 
-
-                // Handles userGetRequest calls
-                else if (Objects.equals(request.getRequestType(), "User")) {
+                } else if (Objects.equals(request.getRequestType(), "User")) {
                     User response = null;
-                    if(request.getId() >= 0) {
+                    if (request.getId() >= 0) {
                         response = getUser(request);
                     }
                     out.println(User.toJSON(response));
-                }
-
-                // Handle ModifyUser request
-                else if (Objects.equals(request.getRequestType(), "ModifyUser")) {
+                } else if (Objects.equals(request.getRequestType(), "ModifyUser")) {
                     User response = null;
                     if (request.getId() >= 0) {
-                       response = handleModifyUserRequest(request);
+                        response = handleModifyUserRequest(request);
                     }
                     out.println(User.toJSON(response));
                 }
-            } // END REQUEST DISCERNMENT
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -98,14 +102,16 @@ class ClientHandler implements Runnable {
         }
     }
 
-//BEGIN HANDLER FUNCTIONS
-    
-    // getGameRequest Handler
+    /**
+     * Retrieves the game associated with the given request ID.
+     *
+     * @param request The client request containing the game ID.
+     * @return The  Game  object corresponding to the ID, or null if not found.
+     */
     private static Game getGame(CustomerRequest request) {
         Game response;
 
         List<Game> gameDatabase = GameDatabase.getInstance().getGameDatabase();
-        // Check if the ID is a valid game, then return
         if (request.getId() >= gameDatabase.size()) {
             response = null;
         } else {
@@ -114,7 +120,12 @@ class ClientHandler implements Runnable {
         return response;
     }
 
-    // getUserRequest Handler
+    /**
+     * Retrieves the user associated with the given request ID.
+     *
+     * @param request The client request containing the user ID.
+     * @return The  User  object corresponding to the ID, or null if not found.
+     */
     private static User getUser(CustomerRequest request) {
         User response;
 
@@ -127,14 +138,23 @@ class ClientHandler implements Runnable {
         return response;
     }
 
+    /**
+     * Modifies the attributes of a user based on the given request.
+     *
+     *  This method is synchronized to ensure thread safety when multiple clients
+     * modify the user database concurrently.
+     *
+     * @param request The client request containing details of the modifications.
+     * @return The modified  User  object.
+     * @throws Exception If an error occurs during modification.
+     */
     private static synchronized User handleModifyUserRequest(CustomerRequest request) throws Exception {
         UserDatabase db = UserDatabase.getInstance();
         List<User> userDatabase = db.getUserDatabase();
 
-        // Locate the user
         User userToModify = userDatabase.get(request.getId());
 
-        // Update Name or Money
+        // Update user attributes based on the request
         Map<String, Object> attributes = request.getAttributesToModify();
         if (attributes.containsKey("Name")) {
             userToModify.setName((String) attributes.get("Name"));
@@ -142,20 +162,15 @@ class ClientHandler implements Runnable {
         if (attributes.containsKey("Money")) {
             userToModify.setMoney((Integer) attributes.get("Money"));
         }
-        // Update Bets by value
         if (attributes.containsKey("addBet")) {
-            // De-serialize bet object so we can do modifications to it
             userToModify.addBet(Bet.fromJSON((String) attributes.get("addBet")));
         }
         if (attributes.containsKey("removeBet")) {
-            // De-serialize bet object so we can do modifications to it
-            userToModify.removeBet(Bet.fromJSON((String) attributes.get("removeBet"))); // Removing a game by ID
+            userToModify.removeBet(Bet.fromJSON((String) attributes.get("removeBet")));
         }
 
         db.saveToFile();
 
-        // Return the updated user
         return userToModify;
-
     }
 }
