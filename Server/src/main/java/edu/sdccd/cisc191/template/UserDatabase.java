@@ -12,23 +12,42 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * A singleton class that manages a database of users. It provides
+ * functionalities for loading, saving, and accessing user data stored
+ * in JSON format. This class ensures thread-safe operations in
+ * concurrent environments.
+ *
+ * <p>The user data is stored in a synchronized list and can be
+ * initialized with default values or loaded from an existing JSON file.</p>
+ *
+ * @author
+ */
 public class UserDatabase {
 
     // Singleton instance
     private static UserDatabase instance;
 
-    // Synchronized list to store users
+    // Synchronized list to store user data
     private static final List<User> userDatabase = Collections.synchronizedList(new ArrayList<>());
 
-    // Path to the JSON file
-    private static final String FILE_PATH = "Server/Users.json";
+    // File path for storing user data
+    private static final String FILE_PATH = "Resources/Users.json";
 
-    // Private constructor to prevent instantiation
+    /**
+     * Private constructor to prevent instantiation outside the class.
+     * Loads the user data from a JSON file or initializes it with
+     * default values if the file doesn't exist.
+     */
     private UserDatabase() {
         loadOrInitializeDatabase();
     }
 
-    // Public method to get the Singleton instance
+    /**
+     * Retrieves the singleton instance of the <code>UserDatabase</code> class.
+     *
+     * @return The singleton <code>UserDatabase</code> instance.
+     */
     public static synchronized UserDatabase getInstance() {
         if (instance == null) {
             instance = new UserDatabase();
@@ -36,14 +55,17 @@ public class UserDatabase {
         return instance;
     }
 
-    // Load users from JSON or initialize with default data
+    /**
+     * Loads the user database from a JSON file if it exists or initializes
+     * it with default data if the file is not found.
+     */
     private void loadOrInitializeDatabase() {
         File file = new File(FILE_PATH);
         if (file.exists()) {
-            // Load from JSON file
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
-                CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(List.class, User.class);
+                CollectionType listType = objectMapper.getTypeFactory()
+                        .constructCollectionType(List.class, User.class);
                 List<User> users = objectMapper.readValue(file, listType);
                 userDatabase.clear();
                 userDatabase.addAll(users);
@@ -55,21 +77,27 @@ public class UserDatabase {
                 saveToFile();
             }
         } else {
-            // Initialize with default data and save to JSON
             System.out.println("UserDatabase file not found. Initializing with default data.");
             initializeDefaultUsers();
             saveToFile();
         }
     }
 
-    // Initialize with default data
+    /**
+     * Initializes the user database with default data, creating
+     * a list of users with randomized IDs and balances.
+     */
     private void initializeDefaultUsers() {
         for (int i = 0; i < 5; i++) {
-            userDatabase.add(new User(UUID.randomUUID().toString().replace("-", "").substring(0, 10), (int) (Math.random() * 1000)));
+            userDatabase.add(new User(
+                    UUID.randomUUID().toString().replace("-", "").substring(0, 10),
+                    (int) (Math.random() * 1000)));
         }
     }
 
-    // Save the current database to JSON
+    /**
+     * Saves the current state of the user database to a JSON file.
+     */
     public void saveToFile() {
         try (Writer writer = new FileWriter(FILE_PATH)) {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -80,12 +108,20 @@ public class UserDatabase {
         }
     }
 
-    // Public method to access users
+    /**
+     * Retrieves an unmodifiable view of the user database.
+     *
+     * @return An unmodifiable <code>List</code> of users.
+     */
     public synchronized List<User> getUserDatabase() {
-        return Collections.unmodifiableList(userDatabase); // Return an unmodifiable view for safety
+        return Collections.unmodifiableList(userDatabase);
     }
 
-    // Get the size of the database
+    /**
+     * Retrieves the size of the user database.
+     *
+     * @return The size of the database as a <code>String</code>.
+     */
     public synchronized String getSize() {
         return String.valueOf(userDatabase.size());
     }

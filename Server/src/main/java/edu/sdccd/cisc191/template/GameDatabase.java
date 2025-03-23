@@ -12,7 +12,15 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-// Singleton to store and load game database
+/**
+ * A singleton class that manages a database of games.
+ * It provides functionalities to load, save, and access the database.
+ *
+ * <p>The data is stored in JSON format, and the database is thread-safe
+ * to ensure proper operation in concurrent environments.</p>
+ *
+ * @author
+ */
 public class GameDatabase {
 
     // Singleton instance
@@ -20,14 +28,23 @@ public class GameDatabase {
 
     private static final List<Game> gameDatabase = Collections.synchronizedList(new ArrayList<>());
 
-    // Create the file server side
-    private static final String FILE_PATH = "Server/games.json";
+    // File path for storing game data
+    private static final String FILE_PATH = "Resources/games.json";
 
+    /**
+     * Private constructor to prevent instantiation outside the class.
+     * Initializes the database by either loading data from the file
+     * or creating a default dataset.
+     */
     private GameDatabase() {
         loadOrInitializeDatabase();
     }
 
-    // Singleton pattern
+    /**
+     * Retrieves the singleton instance of the <code>GameDatabase</code> class.
+     *
+     * @return The singleton <code>GameDatabase</code> instance.
+     */
     public static synchronized GameDatabase getInstance() {
         if (instance == null) {
             instance = new GameDatabase();
@@ -35,14 +52,17 @@ public class GameDatabase {
         return instance;
     }
 
-    // Load from JSON or initialize with default data
+    /**
+     * Loads the game database from a JSON file if it exists, or initializes
+     * it with default data if the file is not found.
+     */
     private void loadOrInitializeDatabase() {
         File file = new File(FILE_PATH);
         if (file.exists()) {
-            // Load from JSON
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
-                CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(List.class, Game.class);
+                CollectionType listType = objectMapper.getTypeFactory()
+                        .constructCollectionType(List.class, Game.class);
                 List<Game> games = objectMapper.readValue(file, listType);
                 gameDatabase.clear();
                 gameDatabase.addAll(games);
@@ -54,14 +74,15 @@ public class GameDatabase {
                 saveToFile();
             }
         } else {
-            // Initialize with default data and save to JSON
             System.out.println("GameDatabase file not found. Initializing with default data.");
             initializeDefaultGames();
             saveToFile();
         }
     }
 
-    // Initialize with default data
+    /**
+     * Initializes the game database with default data.
+     */
     private void initializeDefaultGames() {
         int count = 0;
         for (int i = 0; i < 6; i++) {
@@ -73,7 +94,9 @@ public class GameDatabase {
         }
     }
 
-    // Save the current database to JSON
+    /**
+     * Saves the current state of the game database to a JSON file.
+     */
     private void saveToFile() {
         try (Writer writer = new FileWriter(FILE_PATH)) {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -84,12 +107,20 @@ public class GameDatabase {
         }
     }
 
-    // Once we get the instance, use this to get the values
+    /**
+     * Retrieves an unmodifiable view of the game database.
+     *
+     * @return An unmodifiable <code>List</code> of games.
+     */
     public synchronized List<Game> getGameDatabase() {
-        return Collections.unmodifiableList(gameDatabase); // Return an unmodifiable view for safety
+        return Collections.unmodifiableList(gameDatabase);
     }
 
-    // Get database size
+    /**
+     * Gets the size of the game database.
+     *
+     * @return The size of the database as a <code>String</code>.
+     */
     public synchronized String getSize() {
         return String.valueOf(gameDatabase.size());
     }
