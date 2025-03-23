@@ -29,7 +29,7 @@ public class GameDatabase {
     private static final List<Game> gameDatabase = Collections.synchronizedList(new ArrayList<>());
 
     // File path for storing game data
-    private static final String FILE_PATH = "Resources/games.json";
+    private static final String FILE_PATH = "Server/Resources/games.json";
 
     /**
      * Private constructor to prevent instantiation outside the class.

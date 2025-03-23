@@ -142,7 +142,6 @@ public class Client extends Application {
 
     // -- Request Wrappers ---
 
-    // Gets game with specified ID from database
     /**
      * Retrieves a game object from the server by the specified ID.
      *
@@ -164,7 +163,6 @@ public class Client extends Application {
         return null;
     }
 
-    // Gets User with specified ID from database
     /**
      * Retrieves a user object from the server by the specified ID.
      *
@@ -186,11 +184,12 @@ public class Client extends Application {
         return null;
     }
 
-    // ID of 2 for userDatabase size and (TODO) ID of 1 for gameDatabase size
+    // ID of 2 for userDatabase size and ID of 1 for gameDatabase size
     /**
      * Retrieves the size of a resource (e.g., number of games or users) from the server.
      *
      * @param id the identifier for the resource size request.
+     *           1 for gameDatabase and 2 for userDatabase
      * @return the size of the requested resource; -1 if an error occurs.
      * @throws IOException if an I/O error occurs during the request.
      */

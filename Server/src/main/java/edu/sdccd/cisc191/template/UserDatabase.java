@@ -32,7 +32,7 @@ public class UserDatabase {
     private static final List<User> userDatabase = Collections.synchronizedList(new ArrayList<>());
 
     // File path for storing user data
-    private static final String FILE_PATH = "Resources/Users.json";
+    private static final String FILE_PATH = "Server/Resources/Users.json";
 
     /**
      * Private constructor to prevent instantiation outside the class.
