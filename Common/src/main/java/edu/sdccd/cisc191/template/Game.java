@@ -8,13 +8,24 @@ import java.util.Objects;
 
 public class Game {
 
-    private String team1;
+    private static String team1;
     private String team2;
+    static String getTeam1;
+    static String getTeam2;
+    static Object getSelectedTeam;
+    private static String selectedTeam;
     private Date startDate;
     private Date endDate;
     private String dateClean;
-    private double team1Odd;
-    private double team2Odd;
+    private static double team1Odd;
+    private static double team2Odd;
+    private double team1Wager;
+    private double team2Wager;
+    private double betPool;
+    private double team1PayoutRatio;
+    private double team2PayoutRatio;
+    private double team1ProfitFactor;
+    private double team2ProfitFactor;
 
     //BEGIN MAKING CLASS SERIALIZABLE
     @JsonIgnore
@@ -58,8 +69,12 @@ public class Game {
     }
 
     //Calculating odds with American betting odds using pool of money
-    /*
     public Game(String t1, String t2, Date startDate, Date endDate, double team1Odd, double team2Odd, double pool) {
+        this.team1 = t1;
+        this.team2 = t2;
+        this.startDate = startDate;
+        this.endDate = endDate;
+
        this.team1Wager = 80;
        this.team2Wager = 20;
        this.betPool = team1Wager + team2Wager;
@@ -83,7 +98,6 @@ public class Game {
             this.team2Odd = -(100/team2ProfitFactor);
        }
     }
-    */
 
     @Override
     public String toString() {
@@ -122,7 +136,7 @@ public class Game {
 
         return result;
     }
-    public String getTeam1() {
+    public static String getTeam1() {
         return team1;
     }
 
@@ -130,11 +144,11 @@ public class Game {
         return team2;
     }
 
-    public double getTeam1Odd() {
+    public static double getTeam1Odd() {
         return team1Odd;
     }
 
-    public double getTeam2Odd() {
+    public static double getTeam2Odd() {
         return team2Odd;
     }
 

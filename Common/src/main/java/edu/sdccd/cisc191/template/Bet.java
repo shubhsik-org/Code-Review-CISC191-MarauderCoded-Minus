@@ -3,14 +3,18 @@ package edu.sdccd.cisc191.template;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.Objects;
 import java.util.Random;
+
+import static edu.sdccd.cisc191.template.Game.getTeam1Odd;
 
 public class Bet {
     private Game game;
     private String team;
     private int betAmt;
     private int winAmt;
-    private int winOdds;
+    private double winOdds;
+    private int betTeam;
 
     // Track odds over the last 10 hours for one game only.
     int numHours = 10;
@@ -38,12 +42,22 @@ public class Bet {
     Random random = new Random();
 
     // Betting entry and return calculations
-    public Bet(Game g, int amt, String team) {
+    public double Bet(Game g, int amt, String team) {
         this.game = g;
         this.team = team;
         this.betAmt = amt;
-        this.winAmt = (int) (amt * 1.5);
-        this.winOdds = (int) Math.round(1 + Math.random() * 99);
+        if (Game.getSelectedTeam == Game.getTeam1) {
+            return Game.getTeam1Odd() = winOdds;
+        } else {
+            return Game.getTeam2Odd() = winOdds;
+        }
+
+
+        if (winOdds >= 0) {
+            this.winAmt = (int) (amt + (100 / winOdds) * amt);
+        } else {
+            this.winAmt = (int) (amt + Math.abs((winOdds / 100) * amt));
+        }
 
         // Populate winOddsOvertime with pairs: [odd, timestamp]
         for (int j = 0; j < numHours; j++) {
@@ -52,6 +66,7 @@ public class Bet {
             winOddsOvertime[j][0] = odd;
             winOddsOvertime[j][1] = timeStamp;
         }
+        return 0;
     }
 
     // Updated method: generates a random odd between 1 and 100 (dummy logic).
