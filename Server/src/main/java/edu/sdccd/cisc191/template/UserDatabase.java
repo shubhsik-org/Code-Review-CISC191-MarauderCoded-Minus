@@ -21,7 +21,7 @@ import java.util.UUID;
  * <p>The user data is stored in a synchronized list and can be
  * initialized with default values or loaded from an existing JSON file.</p>
  *
- * @author
+ * @author Andy Ly
  */
 public class UserDatabase {
 

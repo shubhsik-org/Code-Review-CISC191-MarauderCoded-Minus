@@ -19,7 +19,7 @@ import java.util.List;
  * <p>The data is stored in JSON format, and the database is thread-safe
  * to ensure proper operation in concurrent environments.</p>
  *
- * @author
+ * @author Andy Ly
  */
 public class GameDatabase {
 

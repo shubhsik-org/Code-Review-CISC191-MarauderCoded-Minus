@@ -18,7 +18,7 @@ import java.util.*;
  * <p>It supports operations such as retrieving game or user details, updating user information,
  * and managing bets. Communication is facilitated through JSON-encoded requests and responses.</p>
  *
- * @author
+ * @author Andy Ly
  * @see Server
  * @see CustomerRequest
  */
