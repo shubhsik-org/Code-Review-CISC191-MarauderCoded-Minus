@@ -16,8 +16,8 @@ import java.util.List;
  * A singleton class that manages a database of games.
  * It provides functionalities to load, save, and access the database.
  *
- * <p>The data is stored in JSON format, and the database is thread-safe
- * to ensure proper operation in concurrent environments.</p>
+ * The data is stored in JSON format, and the database is thread-safe
+ * to ensure proper operation in concurrent environments.
  *
  * @author Andy Ly
  */
@@ -41,9 +41,9 @@ public class GameDatabase {
     }
 
     /**
-     * Retrieves the singleton instance of the <code>GameDatabase</code> class.
+     * Retrieves the singleton instance of the GameDatabase class.
      *
-     * @return The singleton <code>GameDatabase</code> instance.
+     * @return The singleton GameDatabase instance.
      */
     public static synchronized GameDatabase getInstance() {
         if (instance == null) {
@@ -110,7 +110,7 @@ public class GameDatabase {
     /**
      * Retrieves an unmodifiable view of the game database.
      *
-     * @return An unmodifiable <code>List</code> of games.
+     * @return An unmodifiable List of games.
      */
     public synchronized List<Game> getGameDatabase() {
         return Collections.unmodifiableList(gameDatabase);
@@ -119,7 +119,7 @@ public class GameDatabase {
     /**
      * Gets the size of the game database.
      *
-     * @return The size of the database as a <code>String</code>.
+     * @return The size of the database as a  String .
      */
     public synchronized String getSize() {
         return String.valueOf(gameDatabase.size());

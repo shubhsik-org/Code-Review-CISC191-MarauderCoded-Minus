@@ -10,8 +10,8 @@ import java.util.Objects;
  * Represents a game between two teams with details such as start and end dates,
  * betting odds, and a clean date string representation.
  *
- * <p>Supports JSON serialization and deserialization for easy integration
- * with external systems. Also includes methods for comparing game objects.</p>
+ * Supports JSON serialization and deserialization for easy integration
+ * with external systems. Also includes methods for comparing game objects.
  *
  * @author Andy Ly, Julian Garcia
  */
@@ -29,10 +29,10 @@ public class Game {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
-     * Serializes a <code>Game</code> object into a JSON string.
+     * Serializes a  Game  object into a JSON string.
      *
-     * @param customer The <code>Game</code> object to serialize.
-     * @return A JSON string representation of the <code>Game</code>.
+     * @param customer The  Game  object to serialize.
+     * @return A JSON string representation of the  Game .
      * @throws Exception If serialization fails.
      */
     public static String toJSON(Game customer) throws Exception {
@@ -40,10 +40,10 @@ public class Game {
     }
 
     /**
-     * Deserializes a JSON string into a <code>Game</code> object.
+     * Deserializes a JSON string into a  Game  object.
      *
      * @param input The JSON string to deserialize.
-     * @return A <code>Game</code> object created from the JSON string.
+     * @return A  Game  object created from the JSON string.
      * @throws Exception If deserialization fails.
      */
     public static Game fromJSON(String input) throws Exception {
@@ -51,7 +51,7 @@ public class Game {
     }
 
     /**
-     * Default constructor for <code>Game</code>.
+     * Default constructor for  Game .
      * Required for JSON serialization/deserialization.
      */
     protected Game() {
@@ -59,7 +59,7 @@ public class Game {
     }
 
     /**
-     * Creates a <code>Game</code> object with mock betting odds.
+     * Creates a  Game  object with mock betting odds.
      *
      * @param t1 The name of team 1.
      * @param t2 The name of team 2.
@@ -78,7 +78,7 @@ public class Game {
     }
 
     /**
-     * Creates a <code>Game</code> object with betting odds loaded from an API.
+     * Creates a  Game  object with betting odds loaded from an API.
      *
      * @param t1 The name of team 1.
      * @param t2 The name of team 2.
@@ -109,11 +109,11 @@ public class Game {
     }
 
     /**
-     * Compares two <code>Game</code> objects for equality based on teams,
+     * Compares two  Game  objects for equality based on teams,
      * dates, and odds.
      *
      * @param obj The other object to compare with.
-     * @return <code>true</code> if the two objects are equal, otherwise <code>false</code>.
+     * @return  true  if the two objects are equal, otherwise  false .
      */
     @Override
     public boolean equals(Object obj) {

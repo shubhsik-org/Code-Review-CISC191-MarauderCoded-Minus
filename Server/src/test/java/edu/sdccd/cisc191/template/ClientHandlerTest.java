@@ -10,7 +10,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the <code>ClientHandler</code> class.
+ * Unit tests for the ClientHandler class.
  * Validates that client requests are processed correctly and appropriate
  * responses are sent.
  */
@@ -35,7 +35,7 @@ class ClientHandlerTest {
     }
 
     /**
-     * Tests that the <code>ClientHandler</code> correctly handles a valid request.
+     * Tests that the  ClientHandler  correctly handles a valid request.
      */
     @Test
     void testRunHandlesValidRequest() throws Exception {
@@ -55,7 +55,7 @@ class ClientHandlerTest {
     }
 
     /**
-     * Tests that the <code>ClientHandler</code> gracefully handles an invalid request.
+     * Tests that the  ClientHandler  gracefully handles an invalid request.
      */
     @Test
     void testRunHandlesInvalidRequest() throws IOException {

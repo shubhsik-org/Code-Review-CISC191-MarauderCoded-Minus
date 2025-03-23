@@ -10,12 +10,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the <code>GameDatabase</code> class.
+ * Unit tests for the  GameDatabase  class.
  * Validates loading, saving, and accessing game data.
  */
 class GameDatabaseTest {
 
-    private static final String TEST_FILE_PATH = "Resources/test_games.json";
+    private static final String TEST_FILE_PATH = "Test/Resources/test_games.json";
 
     @BeforeEach
     void setUp() {

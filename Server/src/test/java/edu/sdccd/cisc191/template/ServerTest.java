@@ -9,13 +9,13 @@ import java.net.Socket;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for the <code>Server</code> class.
+ * Unit tests for the Server class.
  * Validates behavior when the server interacts with sockets.
  */
 class ServerTest {
 
     /**
-     * Tests that the server accepts a connection and delegates handling to <code>ClientHandler</code>.
+     * Tests that the server accepts a connection and delegates handling to ClientHandler .
      */
     @Test
     void testServerAcceptsConnection() throws IOException {

@@ -10,8 +10,8 @@ import java.util.Random;
  * the team being bet on, the bet amount, potential winnings, and the
  * odds of winning. Additionally, it tracks odds over time.
  *
- * <p>The class supports JSON serialization and deserialization for integration
- * with external systems and persistent storage.</p>
+ *  The class supports JSON serialization and deserialization for integration
+ * with external systems and persistent storage.
  *
  * @author Brian Tran, Andy Ly, Julian Garcia
  * @see Game
@@ -35,10 +35,10 @@ public class Bet {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
-     * Serializes a <code>Bet</code> object into a JSON string.
+     * Serializes a  Bet  object into a JSON string.
      *
-     * @param bet The <code>Bet</code> object to serialize.
-     * @return A JSON string representation of the <code>Bet</code>.
+     * @param bet The  Bet  object to serialize.
+     * @return A JSON string representation of the  Bet .
      * @throws Exception If serialization fails.
      */
     public static String toJSON(Bet bet) throws Exception {
@@ -46,10 +46,10 @@ public class Bet {
     }
 
     /**
-     * Deserializes a JSON string into a <code>Bet</code> object.
+     * Deserializes a JSON string into a  Bet  object.
      *
      * @param input The JSON string to deserialize.
-     * @return A <code>Bet</code> object created from the JSON string.
+     * @return A  Bet  object created from the JSON string.
      * @throws Exception If deserialization fails.
      */
     public static Bet fromJSON(String input) throws Exception {
@@ -57,7 +57,7 @@ public class Bet {
     }
 
     /**
-     * Default constructor for <code>Bet</code>.
+     * Default constructor for  Bet .
      * Required for JSON serialization/deserialization.
      */
     protected Bet() {
@@ -67,7 +67,7 @@ public class Bet {
     private final Random random = new Random();
 
     /**
-     * Constructs a new <code>Bet</code> with specified game, bet amount, and team.
+     * Constructs a new  Bet  with specified game, bet amount, and team.
      * Initializes potential winnings, odds of winning, and odds tracking over time.
      *
      * @param g The game associated with the bet.
@@ -212,7 +212,7 @@ public class Bet {
     }
 
     /**
-     * Converts the <code>Bet</code> object into a string representation.
+     * Converts the  Bet  object into a string representation.
      *
      * @return A string describing the bet.
      */

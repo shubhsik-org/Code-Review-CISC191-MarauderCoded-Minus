@@ -12,11 +12,11 @@ import java.net.Socket;
 import java.util.*;
 
 /**
- * Handles client requests in a separate thread. Each instance of <code>ClientHandler</code>
+ * Handles client requests in a separate thread. Each instance of  ClientHandler
  * is responsible for processing the requests of a single client connected to the server.
  *
- * <p>It supports operations such as retrieving game or user details, updating user information,
- * and managing bets. Communication is facilitated through JSON-encoded requests and responses.</p>
+ *  It supports operations such as retrieving game or user details, updating user information,
+ * and managing bets. Communication is facilitated through JSON-encoded requests and responses.
  *
  * @author Andy Ly
  * @see Server
@@ -30,7 +30,7 @@ class ClientHandler implements Runnable {
     private BufferedReader in; // Input stream to receive requests from the client
 
     /**
-     * Creates a new <code>ClientHandler</code> for a given client socket.
+     * Creates a new  ClientHandler  for a given client socket.
      *
      * @param socket The client socket to be handled.
      */
@@ -106,7 +106,7 @@ class ClientHandler implements Runnable {
      * Retrieves the game associated with the given request ID.
      *
      * @param request The client request containing the game ID.
-     * @return The <code>Game</code> object corresponding to the ID, or null if not found.
+     * @return The  Game  object corresponding to the ID, or null if not found.
      */
     private static Game getGame(CustomerRequest request) {
         Game response;
@@ -124,7 +124,7 @@ class ClientHandler implements Runnable {
      * Retrieves the user associated with the given request ID.
      *
      * @param request The client request containing the user ID.
-     * @return The <code>User</code> object corresponding to the ID, or null if not found.
+     * @return The  User  object corresponding to the ID, or null if not found.
      */
     private static User getUser(CustomerRequest request) {
         User response;
@@ -141,11 +141,11 @@ class ClientHandler implements Runnable {
     /**
      * Modifies the attributes of a user based on the given request.
      *
-     * <p>This method is synchronized to ensure thread safety when multiple clients
-     * modify the user database concurrently.</p>
+     *  This method is synchronized to ensure thread safety when multiple clients
+     * modify the user database concurrently.
      *
      * @param request The client request containing details of the modifications.
-     * @return The modified <code>User</code> object.
+     * @return The modified  User  object.
      * @throws Exception If an error occurs during modification.
      */
     private static synchronized User handleModifyUserRequest(CustomerRequest request) throws Exception {

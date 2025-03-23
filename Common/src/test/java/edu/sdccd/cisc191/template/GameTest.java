@@ -8,9 +8,9 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the <code>Game</code> class.
+ * Unit tests for the  Game  class.
  * This test class validates the functionality of the methods in the
- * <code>Game</code> class, including constructors, getters, setters,
+ * Game class, including constructors, getters, setters,
  * and overridden methods.
  *
  * @author Andy Ly
@@ -56,7 +56,7 @@ class GameTest {
     }
 
     /**
-     * Tests the <code>getDateClean</code> method to ensure it returns the correct date string.
+     * Tests the  getDateClean  method to ensure it returns the correct date string.
      */
     @Test
     void testGetDateClean() {
@@ -65,7 +65,7 @@ class GameTest {
     }
 
     /**
-     * Tests the <code>toString</code> method for correct output format.
+     * Tests the  toString  method for correct output format.
      */
     @Test
     void testToString() {
@@ -74,7 +74,7 @@ class GameTest {
     }
 
     /**
-     * Tests the <code>equals</code> method to ensure correct equality comparison.
+     * Tests the  equals  method to ensure correct equality comparison.
      */
     @Test
     void testEquals() {
@@ -87,7 +87,7 @@ class GameTest {
     }
 
     /**
-     * Tests the <code>setTeam1</code> and <code>getTeam1</code> methods.
+     * Tests the  setTeam1  and  getTeam1  methods.
      */
     @Test
     void testSetAndGetTeam1() {
@@ -96,7 +96,7 @@ class GameTest {
     }
 
     /**
-     * Tests the <code>setTeam2</code> and <code>getTeam2</code> methods.
+     * Tests the  setTeam2  and  getTeam2  methods.
      */
     @Test
     void testSetAndGetTeam2() {
@@ -105,7 +105,7 @@ class GameTest {
     }
 
     /**
-     * Tests the <code>setStartDate</code> and <code>getStartDate</code> methods.
+     * Tests the  setStartDate  and  getStartDate  methods.
      */
     @Test
     void testSetAndGetStartDate() {
@@ -115,7 +115,7 @@ class GameTest {
     }
 
     /**
-     * Tests the <code>setEndDate</code> and <code>getEndDate</code> methods.
+     * Tests the  setEndDate  and  getEndDate  methods.
      */
     @Test
     void testSetAndGetEndDate() {

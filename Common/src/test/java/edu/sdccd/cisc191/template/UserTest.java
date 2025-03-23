@@ -9,9 +9,9 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the <code>User</code> class.
+ * Unit tests for the  User  class.
  * This test class validates the functionality of the methods in the
- * <code>User</code> class, including getters, setters, and methods
+ * User class, including getters, setters, and methods
  * that manage bets and money attributes.
  *
  * @author Andy Ly
@@ -41,7 +41,7 @@ class UserTest {
     }
 
     /**
-     * Tests the <code>setName</code> and <code>getName</code> methods.
+     * Tests the setName and getName methods.
      */
     @Test
     void testSetAndGetName() {
@@ -50,7 +50,7 @@ class UserTest {
     }
 
     /**
-     * Tests the <code>setMoney</code> and <code>getMoney</code> methods.
+     * Tests the setMoney an  getMoney methods.
      */
     @Test
     void testSetAndGetMoney() {
@@ -59,7 +59,7 @@ class UserTest {
     }
 
     /**
-     * Tests the <code>addBet</code> method to ensure bets are added correctly and money attributes are updated.
+     * Tests the addBet method to ensure bets are added correctly and money attributes are updated.
      */
     @Test
     void testAddBet() {
@@ -74,7 +74,7 @@ class UserTest {
     }
 
     /**
-     * Tests the <code>removeBet</code> method to ensure bets are removed correctly.
+     * Tests the removeBet method to ensure bets are removed correctly.
      */
     @Test
     void testRemoveBet() {
@@ -97,7 +97,7 @@ class UserTest {
     }
 
     /**
-     * Tests the <code>setMoneyBet</code> and <code>getMoneyBet</code> methods.
+     * Tests the setMoneyBet and getMoneyBet methods.
      */
     @Test
     void testSetAndGetMoneyBet() {
@@ -106,7 +106,7 @@ class UserTest {
     }
 
     /**
-     * Tests the <code>checkBet</code> method to verify if an active bet exists for a given game.
+     * Tests the checkBet method to verify if an active bet exists for a given game.
      */
     @Test
     void testCheckBet() {
@@ -121,7 +121,7 @@ class UserTest {
     }
 
     /**
-     * Tests the <code>toJSON</code> method to ensure the <code>User</code> object is serialized correctly.
+     * Tests the toJSON method to ensure the User object is serialized correctly.
      */
     @Test
     void testToJSON() throws Exception {
@@ -133,7 +133,7 @@ class UserTest {
     }
 
     /**
-     * Tests the <code>fromJSON</code> method to ensure the <code>User</code> object is deserialized correctly.
+     * Tests the fromJSON method to ensure the  User  object is deserialized correctly.
      */
     @Test
     void testFromJSON() throws Exception {

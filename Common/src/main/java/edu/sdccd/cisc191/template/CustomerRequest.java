@@ -10,8 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Represents a customer request within the system. Each request includes
  * a request type, an associated ID, and optional attributes for modification.
  *
- * <p>This class supports serialization to and deserialization from JSON format
- * to enable easy data exchange.</p>
+ *  This class supports serialization to and deserialization from JSON format
+ * to enable easy data exchange.
  *
  * @author Andy Ly, Andrew Huang
  */
@@ -25,10 +25,10 @@ public class CustomerRequest {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
-     * Serializes a <code>CustomerRequest</code> object into a JSON string.
+     * Serializes a  CustomerRequest  object into a JSON string.
      *
-     * @param customer The <code>CustomerRequest</code> object to serialize.
-     * @return A JSON string representation of the <code>CustomerRequest</code>.
+     * @param customer The  CustomerRequest  object to serialize.
+     * @return A JSON string representation of the  CustomerRequest .
      * @throws Exception If serialization fails.
      */
     public static String toJSON(CustomerRequest customer) throws Exception {
@@ -36,10 +36,10 @@ public class CustomerRequest {
     }
 
     /**
-     * Deserializes a JSON string into a <code>CustomerRequest</code> object.
+     * Deserializes a JSON string into a  CustomerRequest  object.
      *
      * @param input The JSON string to deserialize.
-     * @return A <code>CustomerRequest</code> object created from the JSON string.
+     * @return A  CustomerRequest  object created from the JSON string.
      * @throws Exception If deserialization fails.
      */
     public static CustomerRequest fromJSON(String input) throws Exception {
@@ -47,7 +47,7 @@ public class CustomerRequest {
     }
 
     /**
-     * Default constructor for <code>CustomerRequest</code>.
+     * Default constructor for  CustomerRequest .
      * Required for JSON serialization/deserialization.
      */
     protected CustomerRequest() {
@@ -55,7 +55,7 @@ public class CustomerRequest {
     }
 
     /**
-     * Creates a <code>CustomerRequest</code> with a specified request type and ID.
+     * Creates a  CustomerRequest  with a specified request type and ID.
      *
      * @param requestType The type of the request.
      * @param id The ID associated with the request.
@@ -67,7 +67,7 @@ public class CustomerRequest {
     }
 
     /**
-     * Creates a <code>CustomerRequest</code> with a specified request type, ID, and
+     * Creates a  CustomerRequest  with a specified request type, ID, and
      * attributes to modify.
      *
      * @param requestType The type of the request.
@@ -90,7 +90,7 @@ public class CustomerRequest {
     }
 
     /**
-     * Converts the <code>CustomerRequest</code> object into a string representation.
+     * Converts the  CustomerRequest  object into a string representation.
      *
      * @return A string containing the request type and ID.
      */

@@ -7,9 +7,9 @@ import java.io.*;
  * A multi-threaded server that listens for connection requests on a specified port
  * and handles each client connection in a separate thread.
  *
- * <p>The server sends the current time to connected clients and continues running
+ *  The server sends the current time to connected clients and continues running
  * indefinitely until it is terminated manually. It uses the {@link ClientHandler}
- * class to process individual client connections.</p>
+ * class to process individual client connections.
  *
  * @version 1.0.0
  * @author Andy Ly
@@ -20,7 +20,7 @@ public class Server {
     /**
      * The entry point of the server application. Sets up the server to listen on
      * port 4444, accepts client connections, and delegates processing to
-     * {@link ClientHandler} instances running in separate threads.
+     * ClientHandler instances running in separate threads.
      *
      * @param args Command-line arguments (not used in this application).
      */

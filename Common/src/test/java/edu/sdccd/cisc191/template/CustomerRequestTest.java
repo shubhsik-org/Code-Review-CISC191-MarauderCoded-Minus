@@ -9,9 +9,9 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the <code>CustomerRequest</code> class.
+ * Unit tests for the CustomerRequest class.
  * This test class ensures that the functionality of the methods in
- * <code>CustomerRequest</code> performs as expected, including JSON
+ * CustomerRequest performs as expected, including JSON
  * serialization and deserialization, as well as attribute handling.
  *
  * @author Andy Ly
@@ -34,7 +34,7 @@ class CustomerRequestTest {
     }
 
     /**
-     * Tests the getter for <code>getRequestType</code>.
+     * Tests the getter for getRequestType .
      * Ensures the request type is correctly returned.
      */
     @Test
@@ -43,7 +43,7 @@ class CustomerRequestTest {
     }
 
     /**
-     * Tests the getter for <code>getId</code>.
+     * Tests the getter for getId .
      * Ensures the request ID is correctly returned.
      */
     @Test
@@ -52,7 +52,7 @@ class CustomerRequestTest {
     }
 
     /**
-     * Tests the getter for <code>getAttributesToModify</code>.
+     * Tests the getter for getAttributesToModify .
      * Ensures that the attributes are returned correctly.
      */
     @Test
@@ -61,7 +61,7 @@ class CustomerRequestTest {
     }
 
     /**
-     * Tests the setter for <code>setId</code>.
+     * Tests the setter for setId .
      * Ensures the request ID is correctly set.
      */
     @Test
@@ -71,7 +71,7 @@ class CustomerRequestTest {
     }
 
     /**
-     * Tests the <code>toString</code> method.
+     * Tests the toString method.
      * Ensures that the string representation matches the expected format.
      */
     @Test
@@ -84,8 +84,8 @@ class CustomerRequestTest {
     }
 
     /**
-     * Tests JSON serialization using <code>toJSON</code>.
-     * Ensures that the serialized JSON matches the structure and values of the <code>CustomerRequest</code> object.
+     * Tests JSON serialization using toJSON .
+     * Ensures that the serialized JSON matches the structure and values of the  CustomerRequest  object.
      */
     @Test
     void testToJSON() throws Exception {
@@ -104,8 +104,8 @@ class CustomerRequestTest {
 
 
     /**
-     * Tests JSON deserialization using <code>fromJSON</code>.
-     * Ensures that a JSON string is correctly deserialized into a <code>CustomerRequest</code> object.
+     * Tests JSON deserialization using fromJSON .
+     * Ensures that a JSON string is correctly deserialized into a CustomerRequest object.
      */
     @Test
     void testFromJSON() throws Exception {

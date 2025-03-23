@@ -18,8 +18,8 @@ import java.util.UUID;
  * in JSON format. This class ensures thread-safe operations in
  * concurrent environments.
  *
- * <p>The user data is stored in a synchronized list and can be
- * initialized with default values or loaded from an existing JSON file.</p>
+ * The user data is stored in a synchronized list and can be
+ * initialized with default values or loaded from an existing JSON file.
  *
  * @author Andy Ly
  */
@@ -44,9 +44,9 @@ public class UserDatabase {
     }
 
     /**
-     * Retrieves the singleton instance of the <code>UserDatabase</code> class.
+     * Retrieves the singleton instance of the UserDatabase class.
      *
-     * @return The singleton <code>UserDatabase</code> instance.
+     * @return The singleton UserDatabase instance.
      */
     public static synchronized UserDatabase getInstance() {
         if (instance == null) {
@@ -111,7 +111,7 @@ public class UserDatabase {
     /**
      * Retrieves an unmodifiable view of the user database.
      *
-     * @return An unmodifiable <code>List</code> of users.
+     * @return An unmodifiable  List  of users.
      */
     public synchronized List<User> getUserDatabase() {
         return Collections.unmodifiableList(userDatabase);
@@ -120,7 +120,7 @@ public class UserDatabase {
     /**
      * Retrieves the size of the user database.
      *
-     * @return The size of the database as a <code>String</code>.
+     * @return The size of the database as a String .
      */
     public synchronized String getSize() {
         return String.valueOf(userDatabase.size());

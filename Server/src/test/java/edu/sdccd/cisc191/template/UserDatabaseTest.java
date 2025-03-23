@@ -10,12 +10,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the <code>UserDatabase</code> class.
+ * Unit tests for the  UserDatabase  class.
  * Validates loading, saving, and accessing user data.
  */
 class UserDatabaseTest {
 
-    private static final String TEST_FILE_PATH = "Resources/test_users.json";
+    private static final String TEST_FILE_PATH = "Test/Resources/test_users.json";
 
     @BeforeEach
     void setUp() {

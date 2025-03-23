@@ -10,8 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * name, available money, money currently in bets, and a list of active bets.
  * Provides methods to manage bets and serialize/deserialize the user object.
  *
- * <p>The class is designed to integrate seamlessly with JSON-based systems,
- * enabling data exchange and persistent storage.</p>
+ * The class is designed to integrate seamlessly with JSON-based systems,
+ * enabling data exchange and persistent storage.
  *
  * @author Andy Ly, Julian Garcia
  */
@@ -27,10 +27,10 @@ public class User {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
-     * Serializes a <code>User</code> object into a JSON string.
+     * Serializes a User object into a JSON string.
      *
-     * @param customer The <code>User</code> object to serialize.
-     * @return A JSON string representation of the <code>User</code>.
+     * @param customer The User object to serialize.
+     * @return A JSON string representation of the  User .
      * @throws Exception If serialization fails.
      */
     public static String toJSON(User customer) throws Exception {
@@ -38,10 +38,10 @@ public class User {
     }
 
     /**
-     * Deserializes a JSON string into a <code>User</code> object.
+     * Deserializes a JSON string into a  User  object.
      *
      * @param input The JSON string to deserialize.
-     * @return A <code>User</code> object created from the JSON string.
+     * @return A User object created from the JSON string.
      * @throws Exception If deserialization fails.
      */
     public static User fromJSON(String input) throws Exception {
@@ -49,7 +49,7 @@ public class User {
     }
 
     /**
-     * Default constructor for <code>User</code>.
+     * Default constructor for  User .
      * Required for JSON serialization/deserialization.
      */
     protected User() {
@@ -57,8 +57,8 @@ public class User {
     }
 
     /**
-     * Creates a new <code>User</code> with the specified name and initial money.
-     * Initializes <code>moneyLine</code> to 0 and <code>moneyBet</code> equal to the initial money.
+     * Creates a new User with the specified name and initial money.
+     * Initializes moneyLine to 0 and  moneyBet  equal to the initial money.
      *
      * @param name The name of the user.
      * @param money The initial amount of money the user has.
@@ -74,7 +74,7 @@ public class User {
      * Checks if the user has an active bet on the specified game.
      *
      * @param game The game to check for active bets.
-     * @return <code>true</code> if an active bet exists for the game, otherwise <code>false</code>.
+     * @return true if an active bet exists for the game, otherwise false.
      */
     public boolean checkBet(Game game) {
         for (Bet bet : bets) {

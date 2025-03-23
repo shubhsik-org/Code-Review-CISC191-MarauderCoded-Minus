@@ -16,12 +16,12 @@ import java.util.Date;
  * and the win odds over time. It uses a JavaFX application to render the UI components such as
  * labels, charts, and buttons to allow users to view bet details and navigate back to the main view.
  *
- * <p>Usage:
+ *  Usage:
  * <pre>
  *   BetInfoView view = new BetInfoView();
  *   view.betInfoView(primaryStage, bet);
  * </pre>
- * </p>
+ *
  */
 public class BetInfoView extends Application {
     /**
