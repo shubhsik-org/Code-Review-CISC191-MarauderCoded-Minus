@@ -56,7 +56,7 @@ public class GameDatabase {
      * Loads the game database from a JSON file if it exists, or initializes
      * it with default data if the file is not found.
      */
-    private void loadOrInitializeDatabase() {
+    void loadOrInitializeDatabase() {
         File file = new File(FILE_PATH);
         if (file.exists()) {
             try {
@@ -97,7 +97,7 @@ public class GameDatabase {
     /**
      * Saves the current state of the game database to a JSON file.
      */
-    private void saveToFile() {
+    void saveToFile() {
         try (Writer writer = new FileWriter(FILE_PATH)) {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.writeValue(writer, gameDatabase);

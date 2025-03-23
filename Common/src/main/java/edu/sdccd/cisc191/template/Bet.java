@@ -178,6 +178,13 @@ public class Bet {
     }
 
     /**
+     * Gets the fulfillment status of the bet based on the odds of winning.
+     */
+    public boolean getFulfillment() {
+        return this.wasFulfilled;
+    }
+
+    /**
      * Gets the team being bet on.
      *
      * @return The team being bet on.

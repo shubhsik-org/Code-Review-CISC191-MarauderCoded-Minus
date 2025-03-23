@@ -59,7 +59,7 @@ public class UserDatabase {
      * Loads the user database from a JSON file if it exists or initializes
      * it with default data if the file is not found.
      */
-    private void loadOrInitializeDatabase() {
+    void loadOrInitializeDatabase() {
         File file = new File(FILE_PATH);
         if (file.exists()) {
             try {
