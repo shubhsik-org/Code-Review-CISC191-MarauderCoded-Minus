@@ -23,7 +23,7 @@ public class Bet {
     private String betTeam;
     private int betAmt;
     private int winAmt;
-    private int winOdds;
+    private int winOdd;
 
     private final int numHours = 10; // Number of hours to track odds
     private final double[][] winOddsOvertime = new double[numHours][2]; // Array to track odds over time
@@ -79,17 +79,17 @@ public class Bet {
         this.game = g;
         this.betTeam = betTeam;
         this.betAmt = amt;
-        if (Game.getSelectedTeam == Game.getTeam1) {
-            Game.getTeam1Odd() = winOdds;
-        } else {
-            Game.getTeam2Odd() = winOdds;
-        }
 
+        if (betTeam.equalsIgnoreCase("team1")) {
+            winOdd = (int) Game.getTeam1Odd();
+        } else if (betTeam.equalsIgnoreCase("team2")) {
+            winOdd = (int) Game.getTeam2Odd();
 
-        if (winOdds >= 0) {
-            this.winAmt = (int) (amt + (100 / winOdds) * amt);
-        } else {
-            this.winAmt = (int) (amt + Math.abs((winOdds / 100) * amt));
+            if (winOdd >= 0) {
+                this.winAmt = (amt + (100 / winOdd) * amt);
+            } else {
+                this.winAmt = (amt + Math.abs((winOdd / 100) * amt));
+            }
         }
 
         // Populate winOddsOvertime with odds and timestamps
@@ -153,7 +153,7 @@ public class Bet {
      * @return The odds of winning as a percentage.
      */
     public double getWinOdds() {
-        return winOdds;
+        return winOdd;
     }
 
     /**
@@ -185,7 +185,7 @@ public class Bet {
      */
     public void updateFulfillment() {
         int randomNumber = random.nextInt(100) + 1; // Generate a number from 1 to 100
-        fulfillment = randomNumber <= winOdds;
+        fulfillment = randomNumber <= winOdd;
     }
 
     /**
