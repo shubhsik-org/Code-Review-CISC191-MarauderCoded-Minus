@@ -151,7 +151,7 @@ public class Game {
      */
     @Override
     public String toString() {
-        return team1 + " vs. " + team2 + " on " + startDate.getMonth() + "/" + startDate.getDate() + "/" + startDate.getYear();
+        return team1 + " vs. " + team2 + " on " + startDate.getMonth() + "/" + startDate.getDate() + "/" + (startDate.getYear() + 1900);
     }
 
     /**
@@ -239,11 +239,13 @@ public class Game {
     /**
      * Generates a clean string representation of the date range for the game.
      *
+     * Offsets are because of the way java.util.Date works.
+     *
      * @return A string describing the start and end dates.
      */
     public String getDateClean() {
-        return startDate.getMonth() + "/" + startDate.getDate() + "/" + startDate.getYear() + " - " +
-                endDate.getMonth() + "/" + endDate.getDate() + "/" + endDate.getYear();
+        return (startDate.getMonth() + 1) + "/" + startDate.getDate() + "/" + (startDate.getYear() + 1900) + " - " +
+                (endDate.getMonth() + 1) + "/" + endDate.getDate() + "/" + (endDate.getYear() + 1900);
     }
 
     /**
