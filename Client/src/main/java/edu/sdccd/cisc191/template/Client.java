@@ -24,19 +24,6 @@ import java.text.DateFormat;
 import java.util.*;
 
 /**
- * This program opens a connection to a computer specified
- * as the first command-line argument.  If no command-line
- * argument is given, it prompts the user for a computer
- * to connect to.  The connection is made to
- * the port specified by LISTENING_PORT.  The program reads one
- * line of text from the connection and then closes the
- * connection.  It displays the text that it read on
- * standard output.  This program is meant to be used with
- * the server program, DateServer, which sends the current
- * date and time on the computer where the server is running.
- */
-
-/**
  * The Client class establishes a connection to a server, sends requests, and builds the JavaFX UI for the application.
  * It handles game, user, and size requests, as well as modifications to user data.
  */
@@ -73,13 +60,12 @@ public class Client extends Application {
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
 
-    // Do not use this method directly to ensure you get a proper response back
-    // Valid request types: "Game", "User", "GetSize"
-    // returnType parameter is just the expected return type
     /**
      * Sends a request to the server and returns a response of the expected type.
      *
-     * @param requestType the type of request to send (e.g., "Game", "User", "GetSize").
+     * Never call this method directly, call one of its wrappers for safe usage.
+     *
+     * @param requestType the type of request to send. For example: "Game", "User", "GetSize".
      * @param id          the identifier for the requested data.
      * @param returnType  the expected class type of the response.
      * @param <T>         the type parameter corresponding to the expected response type.
@@ -102,13 +88,12 @@ public class Client extends Application {
         }
     }
 
-    // Overload sendRequest method to handle modify requests.
-    // Valid request types: "User"
-    // Should only be on user because we run CRUD on GameDatabase through the server
     /**
      * Sends a modification request to the server with specified attributes and returns the updated object.
      *
-     * @param requestType        the type of request (e.g., "ModifyUser").
+     * Never call this method directly, call one of its wrappers for safe usage.
+     *
+     * @param requestType        the type of request, for example: "ModifyUser".
      * @param id                 the identifier for the user to modify.
      * @param modifiedAttributes a map containing the fields and their new values.
      * @param returnType         the expected class type of the response.
@@ -184,12 +169,11 @@ public class Client extends Application {
         return null;
     }
 
-    // ID of 2 for userDatabase size and ID of 1 for gameDatabase size
     /**
      * Retrieves the size of a resource (e.g., number of games or users) from the server.
      *
      * @param id the identifier for the resource size request.
-     *           1 for gameDatabase and 2 for userDatabase
+     *           (1 for gameDatabase and 2 for userDatabase)
      * @return the size of the requested resource; -1 if an error occurs.
      * @throws IOException if an I/O error occurs during the request.
      */
@@ -208,14 +192,12 @@ public class Client extends Application {
         return -1;
     };
 
-    // Modifies a User with specified ID from the database
-    // Takes a map object with the key being the field of the User and the value being the modded value
-    // Valid Keys to use in the Map "Name", "Money", "addBet" "removeBet"
     /**
      * Modifies a user on the server with the provided attributes and returns the updated user.
      *
      * @param id                 the identifier of the user to modify.
      * @param modifiedAttributes a map containing the fields and their new values.
+     *                            Valid Fields: ("Name", "Money", "addBet", "removeBet")
      * @return the updated User object if modification is successful; null otherwise.
      * @throws IOException if an I/O error occurs during the request.
      */
@@ -502,6 +484,15 @@ public class Client extends Application {
         // Retrieve game data (and user data if needed)
         Game[] games = getGames();
         // Note: The sample user array in the original code is replaced by the static "user" field.
+        // The below array is never used, but is shown as a demonstration of potential code
+        // (We never used it because the leaderboard designs we thought up looked ugly).
+        User[] users = new User[]{
+                userGetRequest(0),
+                userGetRequest(1),
+                userGetRequest(2),
+                userGetRequest(3),
+                userGetRequest(4),
+        };
 
         // Create UI components
         TableView<Game> gameTable = createGameTableView(games, stage);

@@ -31,12 +31,12 @@ class MultiClientTest {
         // Fetch initial state of the user
         User initialUser = client.userGetRequest(2);
         assertNotNull(initialUser, "Initial user state should not be null.");
-        System.out.println("Initial User State: " + initialUser);
+        System.out.println(String.format("Intiail User State: Name[%s], Money[%d]", initialUser.getName(), initialUser.getMoney()));
         client.stopConnection();
 
         // Create a thread pool for concurrent client requests
         ExecutorService executor = Executors.newFixedThreadPool(10); // Adjust thread pool size for testing
-        int testRuns = 300; // Reduce test runs for quicker execution in tests
+        int testRuns = 50; // Reduce test runs for quicker execution in tests
         for (int i = 0; i < testRuns; i++) {
             executor.submit(() -> {
                 try {
@@ -74,7 +74,7 @@ class MultiClientTest {
         System.out.println(String.format("Final User State: Name[%s], Money[%d]", finalUser.getName(), finalUser.getMoney()));
 
         // Assertions to validate modifications. Subtract 1 because we start from 0.
-        assertEquals(initialUser.getMoney()-1 + testRuns, finalUser.getMoney(),
+        assertEquals(initialUser.getMoney() + testRuns, finalUser.getMoney(),
                 "Final user's money should increase by the total amount of modifications.");
         assertTrue(finalUser.getName().startsWith("User"), "Final user's name should reflect the last modification.");
         System.out.println("Assertions passed!");

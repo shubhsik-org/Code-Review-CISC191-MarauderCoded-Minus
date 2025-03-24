@@ -25,8 +25,8 @@ class GameTest {
      */
     @BeforeEach
     void setUp() {
-        Date startDate = new Date(2025, 3, 10); // April 10, 2025 (month is 0-based)
-        Date endDate = new Date(2025, 3, 15);  // April 15, 2025
+        Date startDate = new Date(125, 3, 10); // April 10, 2025 (month is 0-based)
+        Date endDate = new Date(125, 3, 15);  // April 15, 2025  (year is 1900 based)
         game1 = new Game("Team A", "Team B", startDate, endDate);
         game2 = new Game("Team C", "Team D", startDate, endDate, 50.0, 60.0);
     }
@@ -60,7 +60,7 @@ class GameTest {
      */
     @Test
     void testGetDateClean() {
-        String expectedDateClean = "3/10/2025 - 3/15/2025";
+        String expectedDateClean = "4/10/2025 - 4/15/2025";
         assertEquals(expectedDateClean, game1.getDateClean(), "The cleaned date string is incorrect.");
     }
 
@@ -78,8 +78,8 @@ class GameTest {
      */
     @Test
     void testEquals() {
-        Date startDate = new Date(2025, 3, 10);
-        Date endDate = new Date(2025, 3, 15);
+        Date startDate = new Date(125, 3, 10);
+        Date endDate = new Date(125, 3, 15);
         Game duplicateGame = new Game("Team A", "Team B", startDate, endDate, game1.getTeam1Odd(), game1.getTeam2Odd());
 
         assertTrue(game1.equals(duplicateGame), "The two games should be equal.");

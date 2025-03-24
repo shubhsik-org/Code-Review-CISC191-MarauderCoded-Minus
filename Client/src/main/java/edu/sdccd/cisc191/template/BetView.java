@@ -6,6 +6,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+/**
+ * The BetView class is a view class that creates
+ * the JavaFX window seen by the User after pressing the Bet button.
+ * It processes the bet amount entered by the user
+ */
 public class BetView extends Application {
     /**
      * The current game for which the bet is being placed.
