@@ -87,7 +87,7 @@ public class GameDatabase {
     private void initializeDefaultGames() {
         // To generate a date between now and 2 years from now
         Date d1 = new Date();
-        Date d2 = new Date(126, 1, 1);
+        Date d2 = new Date(2025, 1, 1);
         // To generate default team numbers
         int count = 0;
         for (int i = 0; i < 6; i++) {
