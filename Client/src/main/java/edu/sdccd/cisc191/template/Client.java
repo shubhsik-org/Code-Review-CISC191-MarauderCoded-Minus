@@ -502,6 +502,23 @@ public class Client extends Application {
         // Retrieve game data (and user data if needed)
         Game[] games = getGames();
         // Note: The sample user array in the original code is replaced by the static "user" field.
+        // The below array is never used, but is shown as a demonstration of potential code
+        // (We never used it because the leaderboard designs we thought up looked ugly).
+        User[] users = new User[]{
+                userGetRequest(0),
+                userGetRequest(1),
+                userGetRequest(2),
+                userGetRequest(3),
+                userGetRequest(4),
+        };
+
+        // Example modification of user
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("Name", "John");
+        attributes.put("Money", 9999);
+        // Serialize Bet object into JSON string before sending to server
+        attributes.put("addBet", Bet.toJSON(new Bet(games[0], 100, games[0].getTeam1())));
+        // --- END EXAMPLE CODE ---
 
         // Create UI components
         TableView<Game> gameTable = createGameTableView(games, stage);
