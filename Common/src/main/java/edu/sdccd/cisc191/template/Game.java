@@ -197,8 +197,8 @@ public class Game {
      * @return A string describing the start and end dates.
      */
     public String getDateClean() {
-        return startDate.getMonth() + 1 + "/" + startDate.getDate() + "/" + startDate.getYear() + 1900 + " - " +
-                endDate.getMonth() + 1 + "/" + endDate.getDate() + "/" + endDate.getYear() + 1900;
+        return (startDate.getMonth() + 1) + "/" + startDate.getDate() + "/" + (startDate.getYear() + 1900) + " - " +
+                (endDate.getMonth() + 1) + "/" + endDate.getDate() + "/" + (endDate.getYear() + 1900);
     }
 
     /**
