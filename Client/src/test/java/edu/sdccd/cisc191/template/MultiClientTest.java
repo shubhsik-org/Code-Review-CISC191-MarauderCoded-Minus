@@ -36,7 +36,7 @@ class MultiClientTest {
 
         // Create a thread pool for concurrent client requests
         ExecutorService executor = Executors.newFixedThreadPool(10); // Adjust thread pool size for testing
-        int testRuns = 100; // Reduce test runs for quicker execution in tests
+        int testRuns = 50; // Reduce test runs for quicker execution in tests
         for (int i = 0; i < testRuns; i++) {
             executor.submit(() -> {
                 try {
