@@ -86,6 +86,28 @@ public class Game {
         this.team2Odd = Math.round(Math.random() * 100);
         this.dateClean = this.getDateClean();
     }
+    /**
+     * Creates a  Game  object with betting odds loaded from an API.
+     *
+     * Does not calculate any odds.
+     *
+     * @param t1 The name of team 1.
+     * @param t2 The name of team 2.
+     * @param startDate The start date of the game.
+     * @param endDate The end date of the game.
+     * @param team1Odd The odds for team 1.
+     * @param team2Odd The odds for team 2.
+     */
+    public Game(String t1, String t2, Date startDate, Date endDate, double team1Odd, double team2Odd) {
+        this.team1 = t1;
+        this.team2 = t2;
+        this.startDate = startDate;
+        this.endDate = endDate;
+
+        this.team1Odd = team1Odd;
+        this.team2Odd = team2Odd;
+        this.dateClean = this.getDateClean();
+    }
 
     /**
      * Creates a  Game  object with betting odds loaded from an API.
