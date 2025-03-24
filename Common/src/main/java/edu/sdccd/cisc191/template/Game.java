@@ -22,8 +22,18 @@ public class Game {
     private Date startDate;
     private Date endDate;
     private String dateClean;
-    private double team1Odd;
-    private double team2Odd;
+    private static double team1Odd;
+    private static double team2Odd;
+    public static boolean getSelectedTeam;
+    public static boolean getTeam1;
+    public static boolean getTeam2;
+    public double team1Wager;
+    public double team2Wager;
+    public double betPool;
+    public double team1PayoutRatio;
+    public double team2PayoutRatio;
+    public double team1ProfitFactor;
+    public double team2ProfitFactor;
 
     @JsonIgnore
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -87,15 +97,29 @@ public class Game {
      * @param team1Odd The odds for team 1.
      * @param team2Odd The odds for team 2.
      */
-    public Game(String t1, String t2, Date startDate, Date endDate, double team1Odd, double team2Odd) {
-        this.team1 = t1;
-        this.team2 = t2;
-        this.startDate = startDate;
-        this.endDate = endDate;
+    public Game(String t1, String t2, Date startDate, Date endDate, double team1Odd, double team2Odd, double pool) {
+        this.team1Wager = 80;
+        this.team2Wager = 20;
+        this.betPool = team1Wager + team2Wager;
 
-        this.team1Odd = team1Odd;
-        this.team2Odd = team2Odd;
-        this.dateClean = this.getDateClean();
+        this.team1PayoutRatio = betPool / team1Wager;
+        this.team2PayoutRatio = betPool / team2Wager;
+
+        this.team1ProfitFactor = team1PayoutRatio - 1;
+        this.team2ProfitFactor = team2PayoutRatio - 1;
+
+        if (team1ProfitFactor >= 1) {
+            this.team1Odd = +(team1ProfitFactor * 100);
+        }
+        else {
+            this.team1Odd = -(100/team1ProfitFactor);
+        }
+        if (this.team2ProfitFactor >= 1) {
+            this.team2Odd = +(team2ProfitFactor * 100);
+        }
+        else {
+            this.team2Odd = -(100/team2ProfitFactor);
+        }
     }
 
     /**
@@ -105,7 +129,7 @@ public class Game {
      */
     @Override
     public String toString() {
-        return team1 + " vs. " + team2 + " on " + startDate.getMonth() + "/" + startDate.getDate() + "/" + (startDate.getYear() + 1900);
+        return team1 + " vs. " + team2 + " on " + startDate.getMonth() + "/" + startDate.getDate() + "/" + startDate.getYear();
     }
 
     /**
@@ -159,7 +183,7 @@ public class Game {
      *
      * @return The betting odds for team 1.
      */
-    public double getTeam1Odd() {
+    public static double getTeam1Odd() {
         return team1Odd;
     }
 
@@ -168,7 +192,7 @@ public class Game {
      *
      * @return The betting odds for team 2.
      */
-    public double getTeam2Odd() {
+    public static double getTeam2Odd() {
         return team2Odd;
     }
 
@@ -192,13 +216,12 @@ public class Game {
 
     /**
      * Generates a clean string representation of the date range for the game.
-     * The offsets are because of how the java.util.Date class is implemented.
      *
      * @return A string describing the start and end dates.
      */
     public String getDateClean() {
-        return (startDate.getMonth() + 1) + "/" + startDate.getDate() + "/" + (startDate.getYear() + 1900) + " - " +
-                (endDate.getMonth() + 1) + "/" + endDate.getDate() + "/" + (endDate.getYear() + 1900);
+        return startDate.getMonth() + "/" + startDate.getDate() + "/" + startDate.getYear() + " - " +
+                endDate.getMonth() + "/" + endDate.getDate() + "/" + endDate.getYear();
     }
 
     /**
