@@ -165,4 +165,26 @@ public class BetTest {
         assertTrue(betString.contains("Bet on"), "String representation should contain 'Bet on'.");
         assertTrue(betString.contains("Team A"), "String representation should contain the team name.");
     }
+
+    /**
+     * Tests the 2D array capability of the winOddsOvertime field.
+     */
+    @Test
+    public void testWinOddsOvertimeArray() {
+        double[][] winOddsOvertime = bet.getWinOddsOvertime();
+        assertEquals(10, winOddsOvertime.length, "Win odds over time should track 10 hours.");
+        assertEquals(2, winOddsOvertime[0].length, "Each entry should contain odds and timestamp.");
+
+        // Validate the first entry
+        double firstOdd = winOddsOvertime[0][0];
+        long firstTimestamp = (long) winOddsOvertime[0][1];
+        assertTrue(firstOdd >= 1 && firstOdd <= 100, "First odd should be between 1 and 100.");
+        assertTrue(firstTimestamp <= System.currentTimeMillis() / 1000, "First timestamp should be a valid epoch time.");
+
+        // Validate the last entry
+        double lastOdd = winOddsOvertime[9][0];
+        long lastTimestamp = (long) winOddsOvertime[9][1];
+        assertTrue(lastOdd >= 1 && lastOdd <= 100, "Last odd should be between 1 and 100.");
+        assertTrue(lastTimestamp <= System.currentTimeMillis() / 1000, "Last timestamp should be a valid epoch time.");
+    }
 }
