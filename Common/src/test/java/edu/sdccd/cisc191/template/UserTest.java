@@ -55,7 +55,7 @@ class UserTest {
     @Test
     void testSetAndGetMoney() {
         user.setMoney(500);
-        assertEquals(1500, user.getMoney(), "The user's total money should be updated to 1500.");
+        assertEquals(500, user.getMoney(), "The user's total money should be updated to 500.");
     }
 
     /**
