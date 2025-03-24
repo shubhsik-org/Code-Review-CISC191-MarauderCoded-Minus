@@ -31,7 +31,7 @@ class MultiClientTest {
         // Fetch initial state of the user
         User initialUser = client.userGetRequest(2);
         assertNotNull(initialUser, "Initial user state should not be null.");
-        System.out.println(String.format("Intiail User State: Name[%s], Money[%d]", initialUser.getName(), initialUser.getMoney()));
+        System.out.println(String.format("Initial User State: Name[%s], Money[%d]", initialUser.getName(), initialUser.getMoney()));
         client.stopConnection();
 
         // Create a thread pool for concurrent client requests
