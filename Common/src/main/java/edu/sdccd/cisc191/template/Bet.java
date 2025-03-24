@@ -81,14 +81,14 @@ public class Bet {
         this.betAmt = amt;
 
         if (betTeam.equalsIgnoreCase("team1")) {
-            winOdd = (int) Game.getTeam1Odd();
+            winOdds = (int) Game.getTeam1Odd();
         } else if (betTeam.equalsIgnoreCase("team2")) {
-            winOdd = (int) Game.getTeam2Odd();
+            winOdds = (int) Game.getTeam2Odd();
 
-            if (winOdd >= 0) {
-                this.winAmt = (amt + (100 / winOdd) * amt);
+            if (winOdds >= 0) {
+                this.winAmt = (amt + (100 / winOdds) * amt);
             } else {
-                this.winAmt = (amt + Math.abs((winOdd / 100) * amt));
+                this.winAmt = (amt + Math.abs((winOdds / 100) * amt));
             }
         }
 
@@ -153,7 +153,7 @@ public class Bet {
      * @return The odds of winning as a percentage.
      */
     public double getWinOdds() {
-        return winOdd;
+        return winOdds;
     }
 
     /**
@@ -185,7 +185,7 @@ public class Bet {
      */
     public void updateFulfillment() {
         int randomNumber = random.nextInt(100) + 1; // Generate a number from 1 to 100
-        fulfillment = randomNumber <= winOdd;
+        fulfillment = randomNumber <= winOdds;
     }
 
     /**
