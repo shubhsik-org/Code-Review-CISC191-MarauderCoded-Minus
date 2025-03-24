@@ -79,18 +79,9 @@ public class Bet {
         this.game = g;
         this.betTeam = betTeam;
         this.betAmt = amt;
-        if (Game.getSelectedTeam == Game.getTeam1) {
-            Game.getTeam1Odd() = winOdds;
-        } else {
-            Game.getTeam2Odd() = winOdds;
-        }
-
-
-        if (winOdds >= 0) {
-            this.winAmt = (int) (amt + (100 / winOdds) * amt);
-        } else {
-            this.winAmt = (int) (amt + Math.abs((winOdds / 100) * amt));
-        }
+        this.winAmt = (int) (amt * 1.5); // Example logic for calculating winnings
+        this.winOdds = (int) Math.round(1 + Math.random() * 99); // Randomized winning odds
+        this.fulfillment = false;
 
         // Populate winOddsOvertime with odds and timestamps
         for (int j = 0; j < numHours; j++) {
