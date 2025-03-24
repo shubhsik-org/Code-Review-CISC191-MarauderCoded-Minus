@@ -192,12 +192,13 @@ public class Game {
 
     /**
      * Generates a clean string representation of the date range for the game.
+     * The offsets are because of how the java.util.Date class is implemented.
      *
      * @return A string describing the start and end dates.
      */
     public String getDateClean() {
-        return startDate.getMonth() + "/" + startDate.getDate() + "/" + startDate.getYear() + " - " +
-                endDate.getMonth() + "/" + endDate.getDate() + "/" + endDate.getYear();
+        return startDate.getMonth() + 1 + "/" + startDate.getDate() + "/" + startDate.getYear() + 1900 + " - " +
+                endDate.getMonth() + 1 + "/" + endDate.getDate() + "/" + endDate.getYear() + 1900;
     }
 
     /**
