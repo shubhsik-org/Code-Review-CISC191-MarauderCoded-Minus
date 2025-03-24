@@ -518,6 +518,7 @@ public class Client extends Application {
         attributes.put("Money", 9999);
         // Serialize Bet object into JSON string before sending to server
         attributes.put("addBet", Bet.toJSON(new Bet(games[0], 100, games[0].getTeam1())));
+        userModifyRequest(2, attributes);
         // --- END EXAMPLE CODE ---
 
         // Create UI components
