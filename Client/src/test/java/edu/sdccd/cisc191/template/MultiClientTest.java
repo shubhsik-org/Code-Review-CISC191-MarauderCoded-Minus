@@ -45,7 +45,7 @@ class MultiClientTest {
                     // Modify User ID 2 with a unique modification
                     Map<String, Object> attributes = new HashMap<>();
                     attributes.put("Name", "User" + Thread.currentThread().getId());
-                    attributes.put("Money", 1);
+                    attributes.put("Increment Money", 1);
 
                     User modifiedUser = client.userModifyRequest(2, attributes);
                     assertNotNull(modifiedUser, "Modified user state should not be null.");

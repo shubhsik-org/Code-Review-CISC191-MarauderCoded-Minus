@@ -162,6 +162,15 @@ class ClientHandler implements Runnable {
         if (attributes.containsKey("Money")) {
             userToModify.setMoney((Integer) attributes.get("Money"));
         }
+
+        if (attributes.containsKey("Increment Money")) {
+            userToModify.incrMoney((Integer) attributes.get("Increment Money"));
+        }
+
+        if (attributes.containsKey("Decrement Money")) {
+            userToModify.incrMoney((Integer) attributes.get("Decrement Money"));
+        }
+
         if (attributes.containsKey("addBet")) {
             userToModify.addBet(Bet.fromJSON((String) attributes.get("addBet")));
         }

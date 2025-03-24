@@ -160,6 +160,23 @@ public class User {
     }
 
     /**
+     * Increments the user's total money.
+     *
+     * @param amt The amount of money to add to the user's balance.
+     */
+    public void incrMoney(int amt) {
+        this.money += amt;
+    }
+
+    /**
+     * Decrements the user's total money.
+     *
+     * @param amt The amount of money to add to the user's balance.
+     */
+    public void decrMoney(int amt) {
+        this.money -= amt;
+    }
+    /**
      * Retrieves the list of active bets for the user.
      *
      * @return A list of active bets.
