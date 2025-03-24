@@ -156,7 +156,7 @@ public class User {
      * @param amt The amount of money to add to the user's balance.
      */
     public void setMoney(int amt) {
-        this.money += amt;
+        this.money = amt;
     }
 
     /**

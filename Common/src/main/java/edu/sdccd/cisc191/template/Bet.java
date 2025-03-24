@@ -20,7 +20,7 @@ import java.util.Random;
 public class Bet {
 
     private Game game;
-    private String team;
+    private String betTeam;
     private int betAmt;
     private int winAmt;
     private int winOdds;
@@ -28,7 +28,7 @@ public class Bet {
     private final int numHours = 10; // Number of hours to track odds
     private final double[][] winOddsOvertime = new double[numHours][2]; // Array to track odds over time
 
-    private boolean wasFulfilled;
+    private boolean fulfillment;
     private final long currentEpochSeconds = System.currentTimeMillis() / 1000; // Current time in seconds
 
     @JsonIgnore
@@ -53,6 +53,7 @@ public class Bet {
      * @throws Exception If deserialization fails.
      */
     public static Bet fromJSON(String input) throws Exception {
+        System.out.println(input);
         return objectMapper.readValue(input, Bet.class);
     }
 
@@ -72,14 +73,15 @@ public class Bet {
      *
      * @param g The game associated with the bet.
      * @param amt The amount of money being bet.
-     * @param team The team being bet on.
+     * @param betTeam The team being bet on.
      */
-    public Bet(Game g, int amt, String team) {
+    public Bet(Game g, int amt, String betTeam) {
         this.game = g;
-        this.team = team;
+        this.betTeam = betTeam;
         this.betAmt = amt;
         this.winAmt = (int) (amt * 1.5); // Example logic for calculating winnings
         this.winOdds = (int) Math.round(1 + Math.random() * 99); // Randomized winning odds
+        this.fulfillment = false;
 
         // Populate winOddsOvertime with odds and timestamps
         for (int j = 0; j < numHours; j++) {
@@ -161,7 +163,7 @@ public class Bet {
      * @return The updated user object.
      */
     public User updateUser(User user) {
-        if (wasFulfilled) {
+        if (fulfillment) {
             user.setMoney(user.getMoney() + winAmt);
         } else {
             user.setMoney(user.getMoney() - winAmt);
@@ -174,14 +176,14 @@ public class Bet {
      */
     public void updateFulfillment() {
         int randomNumber = random.nextInt(100) + 1; // Generate a number from 1 to 100
-        wasFulfilled = randomNumber <= winOdds;
+        fulfillment = randomNumber <= winOdds;
     }
 
     /**
      * Gets the fulfillment status of the bet based on the odds of winning.
      */
     public boolean getFulfillment() {
-        return this.wasFulfilled;
+        return this.fulfillment;
     }
 
     /**
@@ -190,7 +192,7 @@ public class Bet {
      * @return The team being bet on.
      */
     public String getBetTeam() {
-        return team;
+        return betTeam;
     }
 
     /**

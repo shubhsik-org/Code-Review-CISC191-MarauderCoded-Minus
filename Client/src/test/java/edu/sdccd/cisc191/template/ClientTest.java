@@ -21,14 +21,16 @@ public class ClientTest {
 
     @BeforeAll
     public static void initJFX() throws Exception {
-        final CountDownLatch latch = new CountDownLatch(1);
-        // Initialize the JavaFX Platform
-        Platform.startup(() -> {
-            // No need to do anything here
-            latch.countDown();
-        });
-        if (!latch.await(5, TimeUnit.SECONDS)) {
-            throw new Exception("JavaFX platform failed to start.");
+        if (!Platform.isFxApplicationThread()) {
+            final CountDownLatch latch = new CountDownLatch(1);
+            // Initialize the JavaFX Platform
+            Platform.startup(() -> {
+                // No need to do anything here
+                latch.countDown();
+            });
+            if (!latch.await(5, TimeUnit.SECONDS)) {
+                throw new Exception("JavaFX platform failed to start.");
+            }
         }
     }
 

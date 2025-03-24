@@ -22,10 +22,12 @@ public class BetInfoViewTest {
     public static void initJFX() throws Exception {
         // Set the default timezone to UTC so that time labels are predictable.
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-        final CountDownLatch latch = new CountDownLatch(1);
-        Platform.startup(() -> latch.countDown());
-        if (!latch.await(5, TimeUnit.SECONDS)) {
-            throw new Exception("JavaFX platform did not start.");
+        if (!Platform.isFxApplicationThread()) {
+            final CountDownLatch latch = new CountDownLatch(1);
+            Platform.startup(() -> latch.countDown());
+            if (!latch.await(5, TimeUnit.SECONDS)) {
+                throw new Exception("JavaFX platform did not start.");
+            }
         }
     }
 
