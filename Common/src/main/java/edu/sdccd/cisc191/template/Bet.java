@@ -23,7 +23,7 @@ public class Bet {
     private String betTeam;
     private int betAmt;
     private int winAmt;
-    private int winOdd;
+    private int winOdds;
 
     private final int numHours = 10; // Number of hours to track odds
     private final double[][] winOddsOvertime = new double[numHours][2]; // Array to track odds over time
